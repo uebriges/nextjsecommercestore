@@ -2,68 +2,61 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  appAreaStyles,
-  mainStyles,
-  menuStyles,
-  navBarStyles,
-  searchBarStyles,
-} from './styles';
+import { useRouter } from 'next/router';
+import Layout from '../components/Layout';
+import { mainStyles, productPageStyles } from '../styles/styles';
 
-export default function Home() {
+export default function Home(props) {
+  const router = useRouter();
+  props.products.splice(-2);
+  console.log('Products: ', props.products);
   return (
-    <>
+    <Layout>
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Vino</title>
       </Head>
-      <div className="appArea" css={appAreaStyles}>
-        <header>
-          <nav css={navBarStyles}>
-            <div className="logo">
-              <Link href="/">
-                <a>
-                  <Image
-                    src="/wineBottles.svg"
-                    height={60}
-                    width={60}
-                    alt="Home button"
-                  />
-                </a>
-              </Link>
-            </div>
-            <div className="searchBar" css={searchBarStyles}>
-              <input placeholder="Search..." />
-              <button>Search</button>
-            </div>
-            <div className="menu" css={menuStyles}>
-              <Link href="/">
-                <a>
-                  <Image
-                    src="/shoppingCart.svg"
-                    height={60}
-                    width={60}
-                    alt="Shopping Cart"
-                  />
-                </a>
-              </Link>
-              <Link href="/">
-                <a>
-                  <Image
-                    src="/user.png"
-                    height={60}
-                    width={60}
-                    alt="Shopping Cart"
-                  />
-                </a>
-              </Link>
-            </div>
-          </nav>
-        </header>
-        <main css={mainStyles}>
-          <div>asdlfjasdf</div>
-        </main>
-      </div>
-    </>
+      <main css={mainStyles}>
+        <div css={productPageStyles}>
+          {props.products.map((element, index) => {
+            return (
+              <div key={'singleProduct' + index}>
+                <Link
+                  key={'wineImageLink' + index}
+                  href="/singleProduct/[id]"
+                  as={'/singleProduct/' + element.productId}
+                >
+                  <a>
+                    <Image
+                      key={index}
+                      alt="Bottle of vine"
+                      src={
+                        element.imagesPerProduct
+                          ? element.imagesPerProduct.split(';')[0]
+                          : ''
+                      }
+                      width="50"
+                      height="244"
+                    />
+                  </a>
+                </Link>
+                <div key={'productName' + index}>{element.productName}</div>
+                <div key={'productPricePerUnit' + index}>
+                  {element.pricePerUnit}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </main>
+    </Layout>
   );
+}
+
+export async function getServerSideProps(context) {
+  const database = require('../util/database');
+  const getAllProducts = database.getAllProducts;
+  const products = await getAllProducts();
+  return {
+    props: { products }, // will be passed to the page component as props
+  };
 }

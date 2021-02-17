@@ -2,19 +2,21 @@ import { useEffect, useState } from 'react';
 import cookies from '../../utils/cookies';
 
 export default function AddToCart(props) {
-  const [quantity, setQuantity] = useState(0);
-  const [total, setTotal] = useState(0);
+  const [quantityOfSingleProduct, setQuantityOfSingleProduct] = useState(0);
+  const [totalOfSingleProduct, setTotalOfSingleProduct] = useState(0);
 
   function changeQuantityByClickHandler(event) {
     if (event.target.innerHTML === '+') {
-      setQuantity(quantity + 1);
+      setQuantityOfSingleProduct(quantityOfSingleProduct + 1);
     } else {
-      setQuantity(quantity > 0 ? quantity - 1 : 0);
+      setQuantityOfSingleProduct(
+        quantityOfSingleProduct > 0 ? quantityOfSingleProduct - 1 : 0,
+      );
     }
   }
 
   function changeQuantityByInputHandler(event) {
-    setQuantity(Number(event.target.value));
+    setQuantityOfSingleProduct(Number(event.target.value));
   }
 
   function addToCart(event) {
@@ -30,7 +32,7 @@ export default function AddToCart(props) {
         (element) => element.productId === props.product.productId,
       );
       if (product) {
-        product.quantity = product.quantity + quantity;
+        product.quantity = product.quantity + quantityOfSingleProduct;
         productsInCookiesArray.map((element) =>
           element.productId === product.productId ? product : element,
         );
@@ -38,32 +40,34 @@ export default function AddToCart(props) {
           'shoppingCart',
           JSON.stringify(productsInCookiesArray),
         );
+        // props.setTotalQuantity(cookies.updateCartTotalQuantity());
       } else {
         productsInCookiesArray.push({
           productId: props.product.productId,
-          quantity: quantity,
+          quantity: quantityOfSingleProduct,
         });
         cookies.setCookiesClientSide(
           'shoppingCart',
           JSON.stringify(productsInCookiesArray),
         );
+        // props.setTotalQuantity(cookies.updateCartTotalQuantity());
       }
     } else {
       const shoppingCartEntry = {
         productId: props.product.productId,
-        quantity: quantity,
+        quantity: quantityOfSingleProduct,
       };
-      cookies.setCookiesClientSide(
-        'shoppingCart',
-        JSON.stringify([shoppingCartEntry]),
-      );
+      cookies.setCookiesClientSide('shoppingCart', [shoppingCartEntry]);
+      // props.setTotalQuantity(cookies.updateCartTotalQuantity());
     }
-    setQuantity(0);
+    setQuantityOfSingleProduct(0);
   }
 
   useEffect(() => {
-    setTotal(quantity * props.product.pricePerUnit);
-  }, [quantity, props.product.pricePerUnit]);
+    setTotalOfSingleProduct(
+      quantityOfSingleProduct * props.product.pricePerUnit,
+    );
+  }, [quantityOfSingleProduct, props.product.pricePerUnit]);
 
   return (
     <>
@@ -71,12 +75,12 @@ export default function AddToCart(props) {
         <button onClick={changeQuantityByClickHandler}>-</button>
         <input
           type="text"
-          value={quantity}
+          value={quantityOfSingleProduct}
           onChange={changeQuantityByInputHandler}
         />
         <button onClick={changeQuantityByClickHandler}>+</button>
       </div>
-      <div>Total: {total.toFixed(2)}</div>
+      <div>Total: {totalOfSingleProduct.toFixed(2)}</div>
       <div>
         <button onClick={addToCart}>Add to cart</button>
       </div>

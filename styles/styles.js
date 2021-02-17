@@ -106,6 +106,10 @@ export const productPageStyles = css`
   }
 `;
 
+export const shoppingCartStyles = css`
+  background-color: red;
+`;
+
 export const error404Styles = css`
   background-color: rgba(237, 224, 223, 0.3);
   display: flex;

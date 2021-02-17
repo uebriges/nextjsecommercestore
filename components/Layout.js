@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   appAreaStyles,
+  mainStyles,
   menuStyles,
   navBarStyles,
   searchBarStyles,
@@ -39,7 +40,7 @@ export default function Layout(props) {
 
               {true ? (
                 <div>
-                  <Link href="/">
+                  <Link href="/shoppingCart">
                     <a>
                       <Image
                         src="/shoppingCart.svg"
@@ -76,7 +77,7 @@ export default function Layout(props) {
             </div>
           </nav>
         </header>
-        {props.children}
+        <main css={mainStyles}>{props.children}</main>
       </div>
     </>
   );

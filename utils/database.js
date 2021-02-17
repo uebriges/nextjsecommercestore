@@ -17,11 +17,11 @@ export async function getAllProducts() {
   return products.map((product) => camelCaseKeys(product));
 }
 
-export async function getSingleProduct(id) {
-  return camelCaseKeys(
-    await sql`select products.product_id, products.product_name, products.production_year, products.price_per_unit, products.product_description, products.producer, products.inventory, STRING_AGG (cast(image_data as varchar),';') as images_per_product from products, products_images, images where products.product_id = products_images.product_id group by products.product_id order by 1;`,
-  );
-}
+// export async function getSingleProduct(id) {
+//   return camelCaseKeys(
+//     await sql`select products.product_id, products.product_name, products.production_year, products.price_per_unit, products.product_description, products.producer, products.inventory, STRING_AGG (cast(image_data as varchar),';') as images_per_product from products, products_images, images where products.product_id = products_images.product_id group by products.product_id order by 1;`,
+//   );
+// }
 
 // export async function getProductImageLinks() {
 //   return camelCaseKeys(

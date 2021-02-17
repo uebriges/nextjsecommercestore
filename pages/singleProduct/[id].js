@@ -54,11 +54,7 @@ export default function SingleProduct(props) {
         <div className="singleProductAddToCart">
           <div>Price: {props.product.pricePerUnit}</div>
           {/* For later: If admin is logged in, AddToCart is not shown  */}
-          {true ? (
-            <AddToCart pricePerUnit={props.product.pricePerUnit} />
-          ) : (
-            <div></div>
-          )}
+          {true ? <AddToCart product={props.product} /> : <div></div>}
         </div>
       </div>
     </Layout>
@@ -66,7 +62,7 @@ export default function SingleProduct(props) {
 }
 
 export async function getServerSideProps(context) {
-  const database = require('../../util/database');
+  const database = require('../../utils/database');
   const getAllProducts = database.getAllProducts;
   const products = await getAllProducts();
   console.log('Query: ', context.query.id);

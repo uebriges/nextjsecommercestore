@@ -75,12 +75,6 @@ export const mainStyles = css`
 export const productPageStyles = css`
   display: flex;
   flex-wrap: wrap;
-  align-items: stretch;
-  background-color: rgba(237, 224, 223, 0.3);
-  flex: auto;
-  height: 80vh;
-  overflow-y: auto;
-  padding: 15px;
 
   div {
     margin: 15px;
@@ -117,10 +111,7 @@ export const error404Styles = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  flex: auto;
   height: 100vh;
-  overflow-y: auto;
-  padding: 15px;
   text-align: center;
   font-size: 30px;
 `;

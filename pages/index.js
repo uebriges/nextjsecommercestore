@@ -9,7 +9,7 @@ import { productPageStyles } from '../styles/styles';
 export default function Home(props) {
   const router = useRouter();
   props.products.splice(-2);
-  console.log('Products: ', props.products);
+  //console.log('Products: ', props.products);
   return (
     <Layout>
       <Head>
@@ -54,7 +54,10 @@ export async function getServerSideProps(context) {
   const database = require('../utils/database');
   const getAllProducts = database.getAllProducts;
   const products = await getAllProducts();
+
   return {
-    props: { products }, // will be passed to the page component as props
+    props: {
+      products: products || null,
+    }, // will be passed to the page component as props
   };
 }

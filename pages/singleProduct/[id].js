@@ -1,13 +1,18 @@
 /** @jsxImportSource @emotion/react */
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import { productPageStyles } from '../../styles/styles';
+import cookies from '../../utils/cookies';
 import Error404 from '../404';
 import AddToCart from './AddToCart';
 
 export default function SingleProduct(props) {
-  useEffect(() => {}, []);
+  const [totalQuantity, setTotalQuantity] = useState();
+
+  useEffect(() => {
+    setTotalQuantity(cookies.updateCartTotalQuantity());
+  }, []);
 
   if (!props.product) {
     return <Error404 />;
@@ -54,7 +59,14 @@ export default function SingleProduct(props) {
         <div className="singleProductAddToCart">
           <div>Price: {props.product.pricePerUnit}</div>
           {/* For later: If admin is logged in, AddToCart is not shown  */}
-          {true ? <AddToCart product={props.product} /> : <div></div>}
+          {true ? (
+            <AddToCart
+              product={props.product}
+              setTotalQuantity={setTotalQuantity}
+            />
+          ) : (
+            <div></div>
+          )}
         </div>
       </div>
     </Layout>
@@ -65,8 +77,6 @@ export async function getServerSideProps(context) {
   const database = require('../../utils/database');
   const getAllProducts = database.getAllProducts;
   const products = await getAllProducts();
-  console.log('Query: ', context.query.id);
-  console.log(products);
   const product = products.find((element) => {
     return element.productId.toString() === context.query.id;
   });
@@ -75,7 +85,7 @@ export async function getServerSideProps(context) {
     context.res.statusCode = 404;
   }
 
-  console.log('Cookies: ', context.req.cookies);
+  //console.log('Cookies: ', context.req.cookies);
   return {
     props: { product: product || null }, // will be passed to the page component as props
   };

@@ -3,10 +3,10 @@ import Layout from '../../components/Layout';
 import { shoppingCartStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
 
-export default function ShoppingCart() {
+export default function ShoppingCart(props) {
   const shoppingCart = cookies.getCookiesClientSide('shoppingCart');
-  console.log('Shopping cart: ', shoppingCart);
-  console.log('Shopping cart: ', JSON.parse(shoppingCart));
+  console.log('props: ', props);
+
   // const [shoppingCart, setShoppingCart] = useState(
   //   JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
   // );
@@ -42,4 +42,15 @@ export default function ShoppingCart() {
       </div>
     </Layout>
   );
+}
+
+export async function getServerSideProps(context) {
+  const database = require('../../utils/database');
+  const additionalInfo = await database.getAdditionalInfoForCartItemsCookie(
+    JSON.parse(context.req.cookies.shoppingCart),
+  );
+
+  return {
+    props: { additionalInfo }, // will be passed to the page component as props
+  };
 }

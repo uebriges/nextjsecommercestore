@@ -2,7 +2,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   appAreaStyles,
   mainStyles,
@@ -13,14 +13,6 @@ import {
 import cookies from '../utils/cookies';
 
 export default function Layout(props) {
-  const [totalQuantity, setTotalQuantity] = useState();
-
-  useEffect(() => {
-    setTotalQuantity(cookies.updateCartTotalQuantity());
-  }, [totalQuantity]);
-
-  console.log('props.children: ', props.children);
-
   return (
     <>
       <Head>
@@ -60,7 +52,7 @@ export default function Layout(props) {
                       />
                     </a>
                   </Link>
-                  <span>{totalQuantity}</span>
+                  <span>{cookies.updateCartTotalQuantity()}</span>
                 </div>
               ) : (
                 <div></div>
@@ -87,15 +79,7 @@ export default function Layout(props) {
             </div>
           </nav>
         </header>
-        <main css={mainStyles}>
-          {
-            props.children
-            // React.cloneElement(props.children, {
-            //   totalQuantity: totalQuantity,
-            //   setTotalQuantity: setTotalQuantity,
-            // })
-          }
-        </main>
+        <main css={mainStyles}>{props.children}</main>
       </div>
     </>
   );

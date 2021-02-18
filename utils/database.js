@@ -19,7 +19,6 @@ export async function getAllProducts() {
 
 export async function getAdditionalInfoForCartItemsCookie(shoppingCartArray) {
   let productIdArray = [];
-  console.log('shoppingCartArray: ', shoppingCartArray);
   for (let i = 0; i < shoppingCartArray.length; i++) {
     productIdArray.push(shoppingCartArray[i].productId);
   }

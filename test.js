@@ -1,3 +1,4 @@
 const testString =
-  '[{"productId":3,"quantity":18},{"productId":1,"quantity":3},{"productId":5,"quantity":2},{"productId":4,"quantity":10}]';
+  '[{"productId":3,"quantity":2},{"productId":5,"quantity":14},{"productId":2,"quantity":2},{"productId":8,"quantity":4}]';
 console.log(JSON.parse(testString));
+JSON.parse(testString).map((element) => console.log(element.productId));

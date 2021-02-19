@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { shoppingCartStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
 
 export default function UpdateCart(props) {
@@ -65,10 +66,10 @@ export default function UpdateCart(props) {
       updateSingleProductInCart(quantityOfSingleProduct + 1);
     } else {
       setQuantityOfSingleProduct(
-        quantityOfSingleProduct > 0 ? quantityOfSingleProduct - 1 : 0,
+        quantityOfSingleProduct > 1 ? quantityOfSingleProduct - 1 : 1,
       );
       updateSingleProductInCart(
-        quantityOfSingleProduct > 0 ? quantityOfSingleProduct - 1 : 0,
+        quantityOfSingleProduct > 1 ? quantityOfSingleProduct - 1 : 1,
       );
     }
   }
@@ -78,12 +79,32 @@ export default function UpdateCart(props) {
     updateSingleProductInCart(Number(event.target.value));
   }
 
+  function deleteProductFromShoppingCartHandler(event) {
+    const newListOfProductsInCookiesArray = JSON.parse(
+      cookies.getCookiesClientSide('shoppingCart'),
+    ).filter((element) => {
+      return !(element.productId === Number(event.target.id));
+    });
+    cookies.setCookiesClientSide(
+      'shoppingCart',
+      JSON.stringify(newListOfProductsInCookiesArray),
+    );
+    console.log(
+      'cookies after deletion: ',
+      cookies.getCookiesClientSide('shoppingCart'),
+    );
+    props.setTotalQuantity(cookies.updateCartTotalQuantity());
+    //cookies.updateCartTotalQuantity();
+  }
+
   useEffect(() => {
     setSumOfSingleProduct(quantityOfSingleProduct * props.product.pricePerUnit);
   }, [quantityOfSingleProduct]);
 
+  useEffect(() => {});
+
   return (
-    <>
+    <div css={shoppingCartStyles}>
       <div>
         <button onClick={changeQuantityByClickHandler}>-</button>
         <input
@@ -93,9 +114,18 @@ export default function UpdateCart(props) {
         <button onClick={changeQuantityByClickHandler}>+</button>
       </div>
       <div>Total: {sumOfSingleProduct.toFixed(2)}</div>
-      {/* <div>
-        <button onClick={updateSingleProductInCart}>Update cart</button>
-      </div> */}
-    </>
+      <button
+        onClick={deleteProductFromShoppingCartHandler}
+        id={props.product.productId}
+      >
+        Delete
+        {/* <Image
+          src="/deleteButton.svg"
+          height="20"
+          width="20"
+          onclick={deleteProductFromShoppingCartHandler}
+        /> */}
+      </button>
+    </div>
   );
 }

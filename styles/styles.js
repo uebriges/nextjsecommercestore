@@ -108,6 +108,10 @@ export const productPageStyles = css`
 
 export const shoppingCartStyles = css`
   background-color: red;
+
+  .deleteCartItemStyles {
+    pointer-events: none;
+  }
 `;
 
 export const error404Styles = css`

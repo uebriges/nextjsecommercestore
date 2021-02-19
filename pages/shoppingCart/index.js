@@ -7,27 +7,21 @@ import UpdateCart from './UpdateCart';
 
 export default function ShoppingCart(props) {
   const [totalQuantity, setTotalQuantity] = useState();
-  let shoppingCart = cookies.getCookiesClientSide('shoppingCart');
-  shoppingCart = JSON.parse(shoppingCart);
-  console.log('shoppingCart: ', shoppingCart);
-  console.log('props: ', props.additionalInfo);
+  const shoppingCart = props.shoppingCart;
   const completeShoppingCartEntryInfos = [];
 
   // Merge array from cookies (productIds + quantity) with the array from data
   // from the database (imageData, pricePerUnit etc.)
-  for (let i = 0; i < shoppingCart.length; i++) {
-    completeShoppingCartEntryInfos.push({
-      ...shoppingCart[i],
-      ...props.additionalInfo.find(
-        (itmInner) => itmInner.productId === shoppingCart[i].productId,
-      ),
-    });
+  if (shoppingCart) {
+    for (let i = 0; i < shoppingCart.length; i++) {
+      completeShoppingCartEntryInfos.push({
+        ...shoppingCart[i],
+        ...props.additionalInfo.find(
+          (itmInner) => itmInner.productId === shoppingCart[i].productId,
+        ),
+      });
+    }
   }
-
-  console.log(
-    'completeShoppingCartEntryInfos: ',
-    completeShoppingCartEntryInfos,
-  );
 
   useEffect(() => {
     setTotalQuantity(cookies.updateCartTotalQuantity());
@@ -59,9 +53,6 @@ export default function ShoppingCart(props) {
                   <div key={productInShoppingCart.productName + index}>
                     {productInShoppingCart.productName}
                   </div>
-                  {/* <div key={productInShoppingCart.quantity + index}>
-                    {productInShoppingCart.quantity}
-                  </div> */}
                   <div>
                     <UpdateCart
                       product={productInShoppingCart}
@@ -80,11 +71,20 @@ export default function ShoppingCart(props) {
 
 export async function getServerSideProps(context) {
   const database = require('../../utils/database');
-  const additionalInfo = await database.getAdditionalInfoForCartItemsCookie(
-    JSON.parse(context.req.cookies.shoppingCart),
-  );
+  let additionalInfo;
+  let shoppingCart;
+  if (context.req.cookies.shoppingCart) {
+    additionalInfo = await database.getAdditionalInfoForCartItemsCookie(
+      JSON.parse(context.req.cookies.shoppingCart),
+    );
+
+    shoppingCart = JSON.parse(context.req.cookies.shoppingCart);
+  }
 
   return {
-    props: { additionalInfo }, // will be passed to the page component as props
+    props: {
+      additionalInfo: additionalInfo || null,
+      shoppingCart: shoppingCart || null,
+    }, // will be passed to the page component as props
   };
 }

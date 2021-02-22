@@ -1,6 +1,4 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import {
@@ -10,50 +8,67 @@ import {
 } from '../../components/ShoppingCartContext';
 import { shoppingCartStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
-import UpdateCart from './UpdateCart';
 
 export default function ShoppingCart(props) {
-  const router = useRouter();
   const [totalQuantity, setTotalQuantity] = useState();
   const { state, dispatch } = useContext(ShoppingCartContext);
-  // const shoppingCart = props.shoppingCart;
   const shoppingCartContext = useShoppingCartContext();
-  console.log('Router in shoppingcart: ', router);
-  // console.log(
-  //   'shopping cart from client side cookies: ',
-  //   JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
-  // );
-  console.log('additional info from server side db: ', props.additionalInfo);
-  console.log('shopping cart from server side: ', props.shoppingCart);
-  console.log('state before: ', state);
+  const [singleProduct, setSingleProduct] = useState({});
+  const [shoppingCart, setShoppingCart] = useState(
+    cookies.getCookiesClientSide('shoppingCart')
+      ? JSON.parse(cookies.getCookiesClientSide('shoppingCart'))
+      : props.shoppingCart,
+  );
+  const [sumOfSingleProduct, setSumOfSingleProduct] = useState(0);
 
-  if (props.shoppingCart) {
-    shoppingCartContext.dispatch({
-      type: ACTIONS.GET_CART,
+  console.log('state after: ', state);
+
+  function updateSingleProductInCart(productId, newQuantity) {
+    dispatch({
+      type: ACTIONS.UPDATE_CART,
       payload: {
-        shoppingCart: props.shoppingCart,
-        additionalInfo: props.additionalInfo,
+        shoppingCart: shoppingCart,
+        newQuantity: newQuantity,
+        productId: Number(productId),
       },
     });
-  } else {
-    shoppingCartContext.dispatch({
-      type: ACTIONS.GET_CART,
+    setTotalQuantity(cookies.updateCartTotalQuantity());
+  }
+
+  function changeQuantityByClickHandler(event) {
+    const id = Number(event.target.id.slice(1, event.target.id.length));
+    const product = shoppingCart.find((element) => {
+      return element.productId === id;
+    });
+
+    if (event.target.innerHTML === '+') {
+      updateSingleProductInCart(id, product.quantity + 1);
+    } else {
+      if (product.quantity > 0) {
+        updateSingleProductInCart(id, product.quantity - 1);
+      }
+    }
+  }
+
+  function changeQuantityByInputHandler(event) {
+    // setSingleProduct(Number(event.target.value));
+    // updateSingleProductInCart(Number(event.target.value), event.target.id);
+  }
+
+  function deleteProductFromShoppingCartHandler(event) {
+    console.log('deletion');
+    dispatch({
+      type: ACTIONS.DELETE_FROM_CART,
       payload: {
         shoppingCart: JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
-        additionalInfo: props.additionalInfo,
+        deletedItemId: event.target.id,
       },
     });
   }
 
-  // dispatch({
-  //   type: ACTIONS.GET_CART,
-  //   payload: {
-  //     shoppingCart: JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
-  //     additionalInfo: props.additionalInfo,
-  //   },
-  // });
-
-  console.log('state after: ', state);
+  useEffect(() => {
+    // setSumOfSingleProduct(quantityOfSingleProduct * props.product.pricePerUnit);
+  }, [singleProduct]);
 
   useEffect(() => {
     setTotalQuantity(cookies.updateCartTotalQuantity());
@@ -68,10 +83,10 @@ export default function ShoppingCart(props) {
           </Link>
         </div>
         <div>
-          {shoppingCartContext.state.map((productInShoppingCart, index) => {
+          {shoppingCart.map((productInShoppingCart, index) => {
             return (
               <div key={index}>
-                <div className="cartProductImage">
+                {/* <div className="cartProductImage">
                   <Image
                     src={productInShoppingCart.imageData}
                     alt="Product image in cart"
@@ -81,12 +96,41 @@ export default function ShoppingCart(props) {
                 </div>
                 <div key={productInShoppingCart.productName + index}>
                   {productInShoppingCart.productName}
-                </div>
+                </div> */}
                 <div>
-                  <UpdateCart
-                    product={productInShoppingCart}
-                    setTotalQuantity={setTotalQuantity}
-                  />
+                  <div css={shoppingCartStyles}>
+                    <div>
+                      <button
+                        onClick={changeQuantityByClickHandler}
+                        id={'-' + productInShoppingCart.productId}
+                      >
+                        -
+                      </button>
+                      <input
+                        value={productInShoppingCart.quantity}
+                        onChange={changeQuantityByInputHandler}
+                      />
+                      <button
+                        onClick={changeQuantityByClickHandler}
+                        id={'+' + productInShoppingCart.productId}
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div>Total: {sumOfSingleProduct.toFixed(2)}</div>
+                    <button
+                      onClick={deleteProductFromShoppingCartHandler}
+                      id={productInShoppingCart.productId}
+                    >
+                      Delete
+                      {/* <Image
+          src="/deleteButton.svg"
+          height="20"
+          width="20"
+          onclick={deleteProductFromShoppingCartHandler}
+        /> */}
+                    </button>
+                  </div>
                 </div>
               </div>
             );

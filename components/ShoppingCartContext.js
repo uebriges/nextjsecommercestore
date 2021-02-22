@@ -5,6 +5,7 @@ export const ACTIONS = {
   DELETE_FROM_CART: 'delete-from-cart',
   GET_CART: 'get-cart',
   UPDATE_CART: 'update-cart',
+  EMPTY_CART: 'empty-cart',
 };
 
 export const ShoppingCartContext = React.createContext();
@@ -28,9 +29,7 @@ function reducer(shoppingCart, action) {
         'after setting cookies: ',
         JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
       );
-      shoppingCart.length = 0;
-      shoppingCart = [...tempShoppingCart];
-      return shoppingCart;
+      return [...tempShoppingCart];
 
     case ACTIONS.GET_CART:
       console.log('in GET_CART');
@@ -81,6 +80,11 @@ function reducer(shoppingCart, action) {
       cookies.setCookiesClientSide('shoppingCart', productsInCookiesArray);
       cookies.updateCartTotalQuantity();
       return shoppingCart;
+
+    case ACTIONS.EMPTY_CART:
+      cookies.setCookiesClientSide('shoppingCart', JSON.stringify([]));
+      return [];
+
     default:
       return shoppingCart;
   }

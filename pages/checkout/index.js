@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import router from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import {
@@ -6,13 +7,13 @@ import {
   ShoppingCartContext,
 } from '../../components/ShoppingCartContext';
 import { checkoutStyles } from '../../styles/styles';
+import cookies from '../../utils/cookies';
 
 export default function Checkout(props) {
+  // states and contexts
+
   const { dispatch, state } = useContext(ShoppingCartContext);
-  const [
-    deliveryEqualsBillingAddress,
-    setDeliveryEqualsBillingAddress,
-  ] = useState(true);
+  const [sameBillingAddress, setSameBillingAddress] = useState(true);
   const [premiumDelivery, setPremiumDelivery] = useState(true);
   const [nettoPrice, setNettoPrice] = useState(
     state.reduce((lumpSum, shoppingCartItem) => {
@@ -33,32 +34,66 @@ export default function Checkout(props) {
       return 10;
     }
   });
+  const [shoppingCart, setShoppingCart] = useState(
+    cookies.getCookiesClientSide('shoppingCart')
+      ? JSON.parse(cookies.getCookiesClientSide('shoppingCart'))
+      : props.shoppingCart,
+  );
+
+  // Toggle billing information changeability
 
   function activateBillingInformation(event) {
     event.target.value === 'Yes'
-      ? setDeliveryEqualsBillingAddress(true)
-      : setDeliveryEqualsBillingAddress(false);
+      ? setSameBillingAddress(true)
+      : setSameBillingAddress(false);
   }
+
+  // Toggle delivery option
 
   function handleDeliveryOption(event) {
     setPremiumDelivery(event.target.value === 'premium' ? true : false);
   }
 
-  function buyNow() {
-    console.log('buyNOw');
-    // database.persistOrder(
-    //   3,
-    //   2,
-    //   1,
-    //   (nettoPrice * 1.2 + shippingCosts).toFixed(2),
-    // );
+  // Buy products in cart
+
+  async function buyNow() {
+    // Update shopping cart state
+
+    dispatch({
+      type: ACTIONS.GET_CART,
+      payload: {
+        shoppingCart: shoppingCart,
+        additionalInfo: props.additionalInfo,
+      },
+    });
+
+    // Store order
+
+    const response = await fetch('/api/order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        shoppingCart: state,
+        deliveryOptionId: premiumDelivery === true ? 2 : 1,
+        customerId: 3,
+      }),
+    });
+    const orderId = await response.json();
+
+    dispatch({
+      type: ACTIONS.EMPTY_CART,
+    });
+
+    router.push('/thankyou/' + orderId);
   }
 
   useEffect(() => {
     dispatch({
       type: ACTIONS.GET_CART,
       payload: {
-        shoppingCart: props.shoppingCart,
+        shoppingCart: shoppingCart,
         additionalInfo: props.additionalInfo,
       },
     });
@@ -100,7 +135,7 @@ export default function Checkout(props) {
                   value="Yes"
                   id="billingInfoEqualsDeliveryInfoYes"
                   onClick={activateBillingInformation}
-                  checked={deliveryEqualsBillingAddress}
+                  checked={sameBillingAddress}
                 />
                 <br />
                 <label htmlFor="billingInfoEqualsDeliveryInfoNo">No</label>
@@ -118,12 +153,12 @@ export default function Checkout(props) {
                   <input
                     type="text"
                     placeholder="First name"
-                    readOnly={deliveryEqualsBillingAddress}
+                    readOnly={sameBillingAddress}
                   />
                   <input
                     type="text"
                     placeholder="Last name"
-                    readOnly={deliveryEqualsBillingAddress}
+                    readOnly={sameBillingAddress}
                   />
                 </fieldset>
                 <fieldset>
@@ -131,32 +166,32 @@ export default function Checkout(props) {
                   <input
                     type="text"
                     placeholder="Street Address"
-                    readOnly={deliveryEqualsBillingAddress}
+                    readOnly={sameBillingAddress}
                   />
                   <input
                     type="text"
                     placeholder="Street Address Line 2"
-                    readOnly={deliveryEqualsBillingAddress}
+                    readOnly={sameBillingAddress}
                   />
                   <input
                     type="text"
                     placeholder="City"
-                    readOnly={deliveryEqualsBillingAddress}
+                    readOnly={sameBillingAddress}
                   />
                   <input
                     type="text"
                     placeholder="State / Province"
-                    readOnly={deliveryEqualsBillingAddress}
+                    readOnly={sameBillingAddress}
                   />
                   <input
                     type="text"
                     placeholder="Postal / ZIP Code"
-                    readOnly={deliveryEqualsBillingAddress}
+                    readOnly={sameBillingAddress}
                   />
                   <input
                     type="text"
                     placeholder="Country"
-                    readOnly={deliveryEqualsBillingAddress}
+                    readOnly={sameBillingAddress}
                   />
                 </fieldset>
               </form>
@@ -207,6 +242,7 @@ export async function getServerSideProps(context) {
   const database = require('../../utils/database');
   let additionalInfo;
   let shoppingCart;
+
   if (context.req.cookies.shoppingCart) {
     additionalInfo = await database.getAdditionalInfoForCartItemsCookie(
       JSON.parse(context.req.cookies.shoppingCart),

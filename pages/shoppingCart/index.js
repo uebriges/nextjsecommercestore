@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import Router from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import {
@@ -21,7 +21,6 @@ export default function ShoppingCart(props) {
   const [totalQuantity, setTotalQuantity] = useState();
   const shoppingCartContext = useShoppingCartContext();
   const { state, dispatch } = useContext(ShoppingCartContext);
-
   // Update single product in cart after changing quantity
 
   function updateSingleProductInCart(productId, newQuantity) {
@@ -68,10 +67,11 @@ export default function ShoppingCart(props) {
     dispatch({
       type: ACTIONS.DELETE_FROM_CART,
       payload: {
-        shoppingCart: JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
+        shoppingCart: shoppingCart,
         deletedItemId: event.target.id,
       },
     });
+    Router.push('/shoppingCart');
   }
 
   // After mount
@@ -99,7 +99,7 @@ export default function ShoppingCart(props) {
           {state.map((productInShoppingCart, index) => {
             return (
               <div key={index}>
-                <div className="cartProductImage">
+                {/* <div className="cartProductImage">
                   <Image
                     src={productInShoppingCart.imageData}
                     alt="Product image in cart"
@@ -109,7 +109,7 @@ export default function ShoppingCart(props) {
                 </div>
                 <div key={productInShoppingCart.productName + index}>
                   {productInShoppingCart.productName}
-                </div>
+                </div> */}
                 <div>
                   <div css={shoppingCartStyles}>
                     <div>

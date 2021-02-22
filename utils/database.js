@@ -30,6 +30,26 @@ export async function getAdditionalInfoForCartItemsCookie(shoppingCartArray) {
   );
 }
 
+export async function persistOrder(
+  customerId,
+  deliveryOptionId,
+  paymentPreferenceId,
+  sum,
+) {
+  const order = await sql`insert into customer_orders (customer_id, delivery_option_id, payment_preference_id, sum) values (${customerId}, ${deliveryOptionId}, ${paymentPreferenceId}, ${sum}) returning customer_order_id;`;
+
+  console.log('new order id: ', order);
+
+  return camelCaseKeys(order);
+}
+
+module.exports = {
+  getAllProducts: getAllProducts,
+  getAdditionalInfoForCartItemsCookie: getAdditionalInfoForCartItemsCookie,
+  persistOrder: persistOrder,
+  // getProductImageLinks: getProductImageLinks,
+};
+
 // export async function getSingleProduct(id) {
 //   return camelCaseKeys(
 //     await sql`select products.product_id, products.product_name, products.production_year, products.price_per_unit, products.product_description, products.producer, products.inventory, STRING_AGG (cast(image_data as varchar),';') as images_per_product from products, products_images, images where products.product_id = products_images.product_id group by products.product_id order by 1;`,
@@ -46,9 +66,3 @@ export async function getAdditionalInfoForCartItemsCookie(shoppingCartArray) {
 // select image_data from products_images inner join images on  products_images.product_id = ${product_id} // lists all image paths of a specific product
 // select product_id, STRING_AGG (cast(image_data as varchar),', ') as ImagesPerProduct from products_images, images group by product_id order by 1; // lists all images_id and corresponding image paths
 // select product_id, STRING_AGG (cast(image_data as varchar),', ') as ImagesPerProduct from products_images, images where product_id = 3 group by product_id order by 1; // lists image paths of product with product_id = 3
-
-module.exports = {
-  getAllProducts: getAllProducts,
-  getAdditionalInfoForCartItemsCookie: getAdditionalInfoForCartItemsCookie,
-  // getProductImageLinks: getProductImageLinks,
-};

@@ -1,9 +1,16 @@
 import { css } from '@emotion/react';
 
+export const globalStyles = css`
+  html,
+  body {
+    margin: 0;
+  }
+`;
 export const appAreaStyles = css`
   display: flex;
   flex-direction: column;
-  margin: 30px;
+  justify-content: center;
+  height: 100vh;
 `;
 
 export const navBarStyles = css`
@@ -70,6 +77,7 @@ export const mainStyles = css`
   height: 80vh;
   overflow-y: auto;
   padding: 15px;
+  box-sizing: border-box;
 `;
 
 export const productPageStyles = css`
@@ -111,6 +119,44 @@ export const shoppingCartStyles = css`
 
   .deleteCartItemStyles {
     pointer-events: none;
+  }
+`;
+
+export const checkoutStyles = css`
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  div {
+    margin: 0 20px;
+  }
+
+  .checkoutInformation {
+    display: flex;
+    flex-direction: column;
+
+    .checkoutDeliveryAndBilling {
+      display: flex;
+      justify-content: space-between;
+      border: 1px solid;
+    }
+
+    .checkoutDeliveryAndBilling > div {
+      margin: 0 20px;
+      flex-grow: 1;
+      border: 1px solid;
+
+      form > input {
+        margin: 10px 10px;
+      }
+    }
+  }
+
+  .checkoutOverviewAndBuyNow {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid;
+    min-width: 300px;
   }
 `;
 

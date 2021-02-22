@@ -2,14 +2,11 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { productPageStyles } from '../styles/styles';
 
 export default function Home(props) {
-  const router = useRouter();
   props.products.splice(-2);
-  //console.log('Products: ', props.products);
   return (
     <Layout>
       <Head>

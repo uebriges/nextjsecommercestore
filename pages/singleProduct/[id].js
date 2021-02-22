@@ -18,7 +18,6 @@ export default function SingleProduct(props) {
     return <Error404 />;
   }
 
-  console.log(props.product);
   const images = props.product.imagesPerProduct.split(';');
 
   return (

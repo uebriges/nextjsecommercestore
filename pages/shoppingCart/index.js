@@ -1,68 +1,96 @@
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
+import {
+  ACTIONS,
+  ShoppingCartContext,
+  useShoppingCartContext,
+} from '../../components/ShoppingCartContext';
 import { shoppingCartStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
 import UpdateCart from './UpdateCart';
 
 export default function ShoppingCart(props) {
+  const router = useRouter();
   const [totalQuantity, setTotalQuantity] = useState();
-  const shoppingCart = props.shoppingCart;
-  const completeShoppingCartEntryInfos = [];
+  const { state, dispatch } = useContext(ShoppingCartContext);
+  // const shoppingCart = props.shoppingCart;
+  const shoppingCartContext = useShoppingCartContext();
+  console.log('Router in shoppingcart: ', router);
+  // console.log(
+  //   'shopping cart from client side cookies: ',
+  //   JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
+  // );
+  console.log('additional info from server side db: ', props.additionalInfo);
+  console.log('shopping cart from server side: ', props.shoppingCart);
+  console.log('state before: ', state);
 
-  // Merge array from cookies (productIds + quantity) with the array from data
-  // from the database (imageData, pricePerUnit etc.)
-  if (shoppingCart) {
-    for (let i = 0; i < shoppingCart.length; i++) {
-      completeShoppingCartEntryInfos.push({
-        ...shoppingCart[i],
-        ...props.additionalInfo.find(
-          (itmInner) => itmInner.productId === shoppingCart[i].productId,
-        ),
-      });
-    }
+  if (props.shoppingCart) {
+    shoppingCartContext.dispatch({
+      type: ACTIONS.GET_CART,
+      payload: {
+        shoppingCart: props.shoppingCart,
+        additionalInfo: props.additionalInfo,
+      },
+    });
+  } else {
+    shoppingCartContext.dispatch({
+      type: ACTIONS.GET_CART,
+      payload: {
+        shoppingCart: JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
+        additionalInfo: props.additionalInfo,
+      },
+    });
   }
+
+  // dispatch({
+  //   type: ACTIONS.GET_CART,
+  //   payload: {
+  //     shoppingCart: JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
+  //     additionalInfo: props.additionalInfo,
+  //   },
+  // });
+
+  console.log('state after: ', state);
 
   useEffect(() => {
     setTotalQuantity(cookies.updateCartTotalQuantity());
   }, []);
 
-  // const [shoppingCart, setShoppingCart] = useState(
-  //   JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
-  // );
-
   return (
     <Layout>
       <div css={shoppingCartStyles}>
         <div>
-          <button>Go to checkout</button>
+          <Link href="/checkout/" key="checkout">
+            <a>Go to checkout</a>
+          </Link>
         </div>
         <div>
-          {completeShoppingCartEntryInfos.map(
-            (productInShoppingCart, index) => {
-              return (
-                <div key={index}>
-                  <div className="cartProductImage">
-                    <Image
-                      src={productInShoppingCart.imageData}
-                      alt="Product image in cart"
-                      height="244"
-                      width="50"
-                    />
-                  </div>
-                  <div key={productInShoppingCart.productName + index}>
-                    {productInShoppingCart.productName}
-                  </div>
-                  <div>
-                    <UpdateCart
-                      product={productInShoppingCart}
-                      setTotalQuantity={setTotalQuantity}
-                    />
-                  </div>
+          {shoppingCartContext.state.map((productInShoppingCart, index) => {
+            return (
+              <div key={index}>
+                <div className="cartProductImage">
+                  <Image
+                    src={productInShoppingCart.imageData}
+                    alt="Product image in cart"
+                    height="244"
+                    width="50"
+                  />
                 </div>
-              );
-            },
-          )}
+                <div key={productInShoppingCart.productName + index}>
+                  {productInShoppingCart.productName}
+                </div>
+                <div>
+                  <UpdateCart
+                    product={productInShoppingCart}
+                    setTotalQuantity={setTotalQuantity}
+                  />
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </Layout>

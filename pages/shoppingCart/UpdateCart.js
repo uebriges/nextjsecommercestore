@@ -1,4 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import {
+  ACTIONS,
+  ShoppingCartContext,
+} from '../../components/ShoppingCartContext';
 import { shoppingCartStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
 
@@ -7,57 +11,18 @@ export default function UpdateCart(props) {
     props.product.quantity,
   );
   const [sumOfSingleProduct, setSumOfSingleProduct] = useState(0);
+  const { dispatch } = useContext(ShoppingCartContext);
 
   function updateSingleProductInCart(newQuantity) {
-    // Check if product id already available in cookies
-    // If true -> get value, add quantity, write new quantity into cookie
-    // if false -> write quantity into cookie
-
-    // Shopping cart cookie exists already
-    if (cookies.getCookiesClientSide('shoppingCart')) {
-      const productsInCookiesArray = JSON.parse(
-        cookies.getCookiesClientSide('shoppingCart'),
-      );
-      // Find the specific product with the productId in the shopping cart.
-      const product = productsInCookiesArray.find(
-        (element) => element.productId === props.product.productId,
-      );
-      // If that product is already in the shopping cart...
-      if (product) {
-        product.quantity = newQuantity;
-        productsInCookiesArray.map((element) =>
-          element.productId === product.productId ? product : element,
-        );
-        cookies.setCookiesClientSide(
-          'shoppingCart',
-          JSON.stringify(productsInCookiesArray),
-        );
-        props.setTotalQuantity(cookies.updateCartTotalQuantity());
-        cookies.updateCartTotalQuantity();
-        // if product is not yet in the shopping cart...
-      } else {
-        productsInCookiesArray.push({
-          productId: props.product.productId,
-          quantity: newQuantity,
-        });
-        cookies.setCookiesClientSide(
-          'shoppingCart',
-          JSON.stringify(productsInCookiesArray),
-        );
-        props.setTotalQuantity(cookies.updateCartTotalQuantity());
-        cookies.updateCartTotalQuantity();
-      }
-      // Shopping cart cookies doesn't exist yet...
-    } else {
-      const shoppingCartEntry = {
+    dispatch({
+      type: ACTIONS.UPDATE_CART,
+      payload: {
+        shoppingCart: JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
+        newQuantity: newQuantity,
         productId: props.product.productId,
-        quantity: newQuantity,
-      };
-      cookies.setCookiesClientSide('shoppingCart', [shoppingCartEntry]);
-      props.setTotalQuantity(cookies.updateCartTotalQuantity());
-      cookies.updateCartTotalQuantity();
-    }
-    //    setQuantityOfSingleProduct(0);
+      },
+    });
+    props.setTotalQuantity(cookies.updateCartTotalQuantity());
   }
 
   function changeQuantityByClickHandler(event) {
@@ -80,28 +45,19 @@ export default function UpdateCart(props) {
   }
 
   function deleteProductFromShoppingCartHandler(event) {
-    const newListOfProductsInCookiesArray = JSON.parse(
-      cookies.getCookiesClientSide('shoppingCart'),
-    ).filter((element) => {
-      return !(element.productId === Number(event.target.id));
+    console.log('deletion');
+    dispatch({
+      type: ACTIONS.DELETE_FROM_CART,
+      payload: {
+        shoppingCart: JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
+        deletedItemId: event.target.id,
+      },
     });
-    cookies.setCookiesClientSide(
-      'shoppingCart',
-      JSON.stringify(newListOfProductsInCookiesArray),
-    );
-    console.log(
-      'cookies after deletion: ',
-      cookies.getCookiesClientSide('shoppingCart'),
-    );
-    props.setTotalQuantity(cookies.updateCartTotalQuantity());
-    //cookies.updateCartTotalQuantity();
   }
 
   useEffect(() => {
     setSumOfSingleProduct(quantityOfSingleProduct * props.product.pricePerUnit);
   }, [quantityOfSingleProduct]);
-
-  useEffect(() => {});
 
   return (
     <div css={shoppingCartStyles}>
@@ -128,4 +84,8 @@ export default function UpdateCart(props) {
       </button>
     </div>
   );
+}
+
+export function getServerSideProps(context) {
+  console.log('context: ', context);
 }

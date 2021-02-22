@@ -1,5 +1,5 @@
+import Image from 'next/image';
 import Link from 'next/link';
-import Router from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import {
@@ -71,7 +71,15 @@ export default function ShoppingCart(props) {
         deletedItemId: event.target.id,
       },
     });
-    Router.push('/shoppingCart');
+    dispatch({
+      type: ACTIONS.GET_CART,
+      payload: {
+        shoppingCart: shoppingCart,
+        deletedItemId: event.target.id,
+      },
+    });
+    setShoppingCart(state);
+    // Router.push('/shoppingCart');
   }
 
   // After mount
@@ -91,25 +99,35 @@ export default function ShoppingCart(props) {
     <Layout>
       <div css={shoppingCartStyles}>
         <div>
-          <Link href="/checkout/" key="checkout">
-            <a>Go to checkout</a>
-          </Link>
+          {state.length !== 0 ? (
+            <Link href="/checkout/" key="checkout">
+              <a>Go to checkout</a>
+            </Link>
+          ) : (
+            'Your cart is empty'
+          )}
         </div>
         <div>
           {state.map((productInShoppingCart, index) => {
             return (
               <div key={index}>
-                {/* <div className="cartProductImage">
-                  <Image
-                    src={productInShoppingCart.imageData}
-                    alt="Product image in cart"
-                    height="244"
-                    width="50"
-                  />
+                <div className="cartProductImage">
+                  <Link
+                    href={'/singleProduct/' + productInShoppingCart.productId}
+                  >
+                    <a>
+                      <Image
+                        src={productInShoppingCart.imageData}
+                        alt="Product image in cart"
+                        height="244"
+                        width="50"
+                      />
+                    </a>
+                  </Link>
                 </div>
                 <div key={productInShoppingCart.productName + index}>
                   {productInShoppingCart.productName}
-                </div> */}
+                </div>
                 <div>
                   <div css={shoppingCartStyles}>
                     <div>

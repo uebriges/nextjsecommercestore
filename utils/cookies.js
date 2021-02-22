@@ -25,6 +25,9 @@ export function updateCartTotalQuantity() {
       },
       0,
     );
+    if (totalQuantity === 0) {
+      return '';
+    }
     return totalQuantity > 99 ? '99+' : totalQuantity;
   } else {
     return '';

@@ -37,27 +37,31 @@ export async function getAllProducts() {
 
 export async function getAdditionalInfoForCartItemsCookie(shoppingCartArray) {
   let productIdArray = [];
+  let additionalProductInformation;
   for (let i = 0; i < shoppingCartArray.length; i++) {
     productIdArray.push(shoppingCartArray[i].productId);
   }
 
-  const additionalProductInformation = await sql`
-  SELECT DISTINCT
-    products.product_id,
-    products.product_name,
-    products.price_per_unit,
-    products_images.image_id,
-    images.image_data
-  FROM products
-    INNER JOIN products_images
-      ON products.product_id = products_images.product_id
-    INNER JOIN images
-      ON products_images.image_id = images.image_id
-  WHERE products.product_id IN (${productIdArray})`;
-
-  return additionalProductInformation.map((productInfo) =>
-    camelCaseKeys(productInfo),
-  );
+  if (productIdArray.length !== 0) {
+    additionalProductInformation = await sql`
+    SELECT DISTINCT
+      products.product_id,
+      products.product_name,
+      products.price_per_unit,
+      products_images.image_id,
+      images.image_data
+    FROM products
+      INNER JOIN products_images
+        ON products.product_id = products_images.product_id
+      INNER JOIN images
+        ON products_images.image_id = images.image_id
+    WHERE products.product_id IN (${productIdArray})`;
+    return additionalProductInformation.map((productInfo) =>
+      camelCaseKeys(productInfo),
+    );
+  } else {
+    return [];
+  }
 }
 
 // Persist new order in database
@@ -71,7 +75,7 @@ export async function persistOrder(shoppingCart, deliveryOptionId, customerId) {
     0,
   );
 
-  // insert order in customer_orders
+  // Store order in customer_orders
 
   let orderId = await sql`
   INSERT INTO customer_orders

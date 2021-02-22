@@ -11,16 +11,16 @@ import { shoppingCartStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
 
 export default function ShoppingCart(props) {
-  const [totalQuantity, setTotalQuantity] = useState();
-  const { state, dispatch } = useContext(ShoppingCartContext);
-  const shoppingCartContext = useShoppingCartContext();
-  const [singleProduct, setSingleProduct] = useState({});
+  // States and Contexts
+
   const [shoppingCart, setShoppingCart] = useState(
     cookies.getCookiesClientSide('shoppingCart')
       ? JSON.parse(cookies.getCookiesClientSide('shoppingCart'))
       : props.shoppingCart,
   );
-  const [sumOfSingleProduct, setSumOfSingleProduct] = useState(0);
+  const [totalQuantity, setTotalQuantity] = useState();
+  const shoppingCartContext = useShoppingCartContext();
+  const { state, dispatch } = useContext(ShoppingCartContext);
 
   // Update single product in cart after changing quantity
 
@@ -74,9 +74,7 @@ export default function ShoppingCart(props) {
     });
   }
 
-  useEffect(() => {
-    // setSumOfSingleProduct(quantityOfSingleProduct * props.product.pricePerUnit);
-  }, [singleProduct]);
+  // After mount
 
   useEffect(() => {
     dispatch({
@@ -86,8 +84,6 @@ export default function ShoppingCart(props) {
         additionalInfo: props.additionalInfo,
       },
     });
-
-    // setTotalQuantity(cookies.updateCartTotalQuantity());
     setTotalQuantity(cookies.updateCartTotalQuantity());
   }, []);
 
@@ -131,7 +127,11 @@ export default function ShoppingCart(props) {
                         +
                       </button>
                     </div>
-                    <div>Total: {sumOfSingleProduct.toFixed(2)}</div>
+                    <div>
+                      Total:
+                      {productInShoppingCart.quantity *
+                        productInShoppingCart.pricePerUnit}
+                    </div>
                     <button
                       onClick={deleteProductFromShoppingCartHandler}
                       id={productInShoppingCart.productId}
@@ -159,11 +159,11 @@ export async function getServerSideProps(context) {
   const database = require('../../utils/database');
   let additionalInfo;
   let shoppingCart;
+
   if (context.req.cookies.shoppingCart) {
     additionalInfo = await database.getAdditionalInfoForCartItemsCookie(
       JSON.parse(context.req.cookies.shoppingCart),
     );
-
     shoppingCart = JSON.parse(context.req.cookies.shoppingCart);
   }
 

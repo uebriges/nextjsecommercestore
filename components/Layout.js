@@ -58,7 +58,7 @@ export default function Layout(props) {
                 <div></div>
               )}
               <div className="userProfileLink">
-                <Link href="/">
+                <Link href="/user/login">
                   <a>
                     <Image
                       className="userProfileImage"

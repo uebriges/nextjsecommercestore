@@ -71,11 +71,13 @@ export default function ShoppingCart(props) {
         deletedItemId: event.target.id,
       },
     });
+    console.log('State after deletion: ', state);
+    console.log('shopping cart after deletion: ', state);
     dispatch({
       type: ACTIONS.GET_CART,
       payload: {
         shoppingCart: shoppingCart,
-        deletedItemId: event.target.id,
+        additionalInfo: props.additionalInfo,
       },
     });
     setShoppingCart(state);

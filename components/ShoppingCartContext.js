@@ -29,6 +29,7 @@ function reducer(shoppingCart, action) {
         'after setting cookies: ',
         JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
       );
+      console.log('temp shopping cart: ', tempShoppingCart);
       return [...tempShoppingCart];
 
     case ACTIONS.GET_CART:

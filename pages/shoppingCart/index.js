@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import {
   ACTIONS,
-  ShoppingCartContext
+  ShoppingCartContext,
 } from '../../components/ShoppingCartContext';
 import { shoppingCartStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
@@ -18,10 +18,11 @@ export default function ShoppingCart(props) {
   );
   const [totalQuantity, setTotalQuantity] = useState();
   const { state, dispatch } = useContext(ShoppingCartContext);
+  console.log('state after declaration: ', state);
   // Update single product in cart after changing quantity
 
   function updateSingleProductInCart(productId, newQuantity) {
-    dispatch({
+    const teset = dispatch({
       type: ACTIONS.ADD_ADDITIONAL_INFO_TO_CART,
       payload: {
         shoppingCart: shoppingCart,
@@ -29,6 +30,7 @@ export default function ShoppingCart(props) {
         productId: Number(productId),
       },
     });
+    console.log('test: ', teset);
     setTotalQuantity(cookies.updateCartTotalQuantity());
     dispatch({
       type: ACTIONS.GET_CART,
@@ -61,23 +63,25 @@ export default function ShoppingCart(props) {
 
   function deleteProductFromShoppingCartHandler(event) {
     console.log('deletion');
-    dispatch({
+    const test = dispatch({
       type: ACTIONS.DELETE_FROM_CART,
       payload: {
         shoppingCart: shoppingCart,
         deletedItemId: event.target.id,
+        currentState: state,
       },
     });
+    console.log('test delete: ', test);
     console.log('State after deletion: ', state);
     console.log('shopping cart after deletion: ', state);
-    dispatch({
-      type: ACTIONS.GET_CART,
-      payload: {
-        shoppingCart: shoppingCart,
-        additionalInfo: props.additionalInfo,
-      },
-    });
-    setShoppingCart(state);
+    // dispatch({
+    //   type: ACTIONS.GET_CART,
+    //   payload: {
+    //     shoppingCart: shoppingCart,
+    //     additionalInfo: props.additionalInfo,
+    //   },
+    // });
+    //setShoppingCart(state);
     // Router.push('/shoppingCart');
   }
 
@@ -93,7 +97,7 @@ export default function ShoppingCart(props) {
       },
     });
     setTotalQuantity(cookies.updateCartTotalQuantity());
-  }, []);
+  }, [dispatch, props.additionalInfo, shoppingCart]);
 
   return (
     <Layout>

@@ -130,7 +130,7 @@ export async function userNameExists(username) {
     'length: ',
     users.map((user) => camelCaseKeys(user)).length !== 0,
   );
-  return users.map((user) => camelCaseKeys(user)).length !== 0;
+  return users.length !== 0;
 }
 
 // Check if user name exists
@@ -145,7 +145,11 @@ export async function getUserByUserName(username) {
 
   console.log('user: ', user);
   console.log('length: ', user.map((user) => camelCaseKeys(user)).length !== 0);
-  return user.map((user) => camelCaseKeys(user)).length !== 0 ? user : false;
+  if (user.length !== 0) {
+    return user.map((user) => camelCaseKeys(user));
+  } else {
+    return false;
+  }
 }
 
 // Check if password is valid
@@ -153,12 +157,12 @@ export async function getUserByUserName(username) {
 export async function passwordValid(username, password) {
   console.log('username: ', username);
   console.log('password: ', password);
+  console.log('password argon: ', await argon2.hash(password));
 
   const users = await sql`
     SELECT *
     FROM customers
     WHERE user_name = ${username}
-    AND password_hash = ${argon2.hash(password)}
   `;
 
   return users.map((user) => camelCaseKeys(user)).length !== 0;
@@ -184,7 +188,15 @@ export async function registerUser(username, email, password) {
   return user.map((user) => camelCaseKeys(user));
 }
 
-export async function createSession(userId, token) {}
+export async function createSession(userId, token) {
+  const date = new Date();
+  const session = sql`
+    INSERT INTO sessions
+      (user_id, token)
+    VALUES
+      (${userId}, ${token})
+  `;
+}
 
 module.exports = {
   getAllProducts: getAllProducts,
@@ -193,6 +205,8 @@ module.exports = {
   userNameExists: userNameExists,
   registerUser: registerUser,
   passwordValid: passwordValid,
+  createSession: createSession,
+  getUserByUserName: getUserByUserName,
 };
 
 // export async function getSingleProduct(id) {

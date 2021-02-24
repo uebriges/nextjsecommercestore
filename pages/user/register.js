@@ -40,8 +40,6 @@ export default function Register(props) {
     });
 
     const { success } = await response.json();
-    console.log('response.status: ', response.status);
-    console.log('success?: ', success);
     if (success) {
       router.push('/user/login');
     } else {

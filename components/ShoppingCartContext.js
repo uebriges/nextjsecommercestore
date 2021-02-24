@@ -29,7 +29,13 @@ function reducer(shoppingCart, action) {
         JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
       );
       console.log('temp shopping cart: ', tempShoppingCart);
-      return tempShoppingCart;
+      const newState = tempShoppingCart.map((cookieProduct) =>
+        action.payload.currentState.find((realProduct) => {
+          return realProduct.productId === cookieProduct.productId;
+        }),
+      );
+      console.log('tempShopingCart: ', newState);
+      return newState;
 
     case ACTIONS.GET_CART:
       console.log('in GET_CART');

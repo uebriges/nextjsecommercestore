@@ -1,10 +1,10 @@
-import React, { useContext, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import cookies from '../utils/cookies';
 
 export const ACTIONS = {
   DELETE_FROM_CART: 'delete-from-cart',
   GET_CART: 'get-cart',
-  UPDATE_CART: 'update-cart',
+  ADD_ADDITIONAL_INFO_TO_CART: 'update-cart',
   EMPTY_CART: 'empty-cart',
 };
 
@@ -15,9 +15,8 @@ function reducer(shoppingCart, action) {
   switch (action.type) {
     case ACTIONS.DELETE_FROM_CART:
       console.log('in DELETE');
-      let tempShoppingCart = [];
       cookies.updateCartTotalQuantity();
-      tempShoppingCart = action.payload.shoppingCart.filter((element) => {
+      const tempShoppingCart = action.payload.shoppingCart.filter((element) => {
         return !(element.productId === Number(action.payload.deletedItemId));
       });
       console.log('temp Shopping cart after deletion: ', tempShoppingCart);
@@ -30,14 +29,14 @@ function reducer(shoppingCart, action) {
         JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
       );
       console.log('temp shopping cart: ', tempShoppingCart);
-      return [...tempShoppingCart];
+      return tempShoppingCart;
 
     case ACTIONS.GET_CART:
       console.log('in GET_CART');
-      shoppingCart.length = 0;
+      const updatedCart = [];
       if (action.payload.shoppingCart) {
         for (let i = 0; i < action.payload.shoppingCart.length; i++) {
-          shoppingCart.push({
+          updatedCart.push({
             ...action.payload.shoppingCart[i],
             ...action.payload.additionalInfo.find(
               (itmInner) =>
@@ -46,10 +45,10 @@ function reducer(shoppingCart, action) {
           });
         }
       }
-      console.log('Enriched shopping cart: ', shoppingCart);
-      return shoppingCart;
+      console.log('Enriched shopping cart: ', updatedCart);
+      return updatedCart;
 
-    case ACTIONS.UPDATE_CART:
+    case ACTIONS.ADD_ADDITIONAL_INFO_TO_CART:
       let productsInCookiesArray;
       // Shopping cart cookie exists already
       if (action.payload.shoppingCart) {
@@ -100,5 +99,3 @@ export function ShoppingCartContextProvider({ children }) {
     </ShoppingCartContext.Provider>
   );
 }
-
-export const useShoppingCartContext = () => useContext(ShoppingCartContext);

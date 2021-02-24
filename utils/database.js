@@ -1,5 +1,7 @@
+import argon2 from 'argon2';
 import camelCaseKeys from 'camelcase-keys';
 import postgres from 'postgres';
+
 const test = require('dotenv-safe').config();
 let sql = postgres();
 
@@ -113,10 +115,84 @@ export async function persistOrder(shoppingCart, deliveryOptionId, customerId) {
   return orderId;
 }
 
+// Check if user name exists
+
+export async function userNameExists(username) {
+  console.log('db -> username: ', typeof username);
+  const users = await sql`
+    SELECT *
+    FROM customers
+    WHERE user_name = ${username};
+  `;
+
+  console.log('user: ', users);
+  console.log(
+    'length: ',
+    users.map((user) => camelCaseKeys(user)).length !== 0,
+  );
+  return users.map((user) => camelCaseKeys(user)).length !== 0;
+}
+
+// Check if user name exists
+
+export async function getUserByUserName(username) {
+  console.log('db -> username: ', typeof username);
+  const user = await sql`
+    SELECT *
+    FROM customers
+    WHERE user_name = ${username};
+  `;
+
+  console.log('user: ', user);
+  console.log('length: ', user.map((user) => camelCaseKeys(user)).length !== 0);
+  return user.map((user) => camelCaseKeys(user)).length !== 0 ? user : false;
+}
+
+// Check if password is valid
+
+export async function passwordValid(username, password) {
+  console.log('username: ', username);
+  console.log('password: ', password);
+
+  const users = await sql`
+    SELECT *
+    FROM customers
+    WHERE user_name = ${username}
+    AND password_hash = ${argon2.hash(password)}
+  `;
+
+  return users.map((user) => camelCaseKeys(user)).length !== 0;
+}
+
+// Add new user/customer
+
+export async function registerUser(username, email, password) {
+  console.log('username: ', username);
+  console.log('email: ', email);
+  console.log('password: ', password);
+
+  const user = await sql`
+    INSERT INTO
+      customers (
+          user_name, email,
+          password_hash
+      )
+    VALUES (${username}, ${email}, ${password});
+  `;
+
+  console.log('user: ', user);
+  return user.map((user) => camelCaseKeys(user));
+}
+
+export async function createSession(userId, token) {}
+
 module.exports = {
   getAllProducts: getAllProducts,
   getAdditionalInfoForCartItemsCookie: getAdditionalInfoForCartItemsCookie,
   persistOrder: persistOrder,
+  userNameExists: userNameExists,
+  registerUser: registerUser,
+  passwordValid: passwordValid,
 };
 
 // export async function getSingleProduct(id) {

@@ -4,28 +4,25 @@ import { useContext, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import {
   ACTIONS,
-  ShoppingCartContext,
-  useShoppingCartContext,
+  ShoppingCartContext
 } from '../../components/ShoppingCartContext';
 import { shoppingCartStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
 
 export default function ShoppingCart(props) {
   // States and Contexts
-
   const [shoppingCart, setShoppingCart] = useState(
     cookies.getCookiesClientSide('shoppingCart')
       ? JSON.parse(cookies.getCookiesClientSide('shoppingCart'))
       : props.shoppingCart,
   );
   const [totalQuantity, setTotalQuantity] = useState();
-  const shoppingCartContext = useShoppingCartContext();
   const { state, dispatch } = useContext(ShoppingCartContext);
   // Update single product in cart after changing quantity
 
   function updateSingleProductInCart(productId, newQuantity) {
     dispatch({
-      type: ACTIONS.UPDATE_CART,
+      type: ACTIONS.ADD_ADDITIONAL_INFO_TO_CART,
       payload: {
         shoppingCart: shoppingCart,
         newQuantity: newQuantity,
@@ -87,6 +84,7 @@ export default function ShoppingCart(props) {
   // After mount
 
   useEffect(() => {
+    console.log('use effect');
     dispatch({
       type: ACTIONS.GET_CART,
       payload: {

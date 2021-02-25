@@ -32,25 +32,36 @@ export default async function handler(req, res) {
   );
 
   if (!(await database.userNameExists(username))) {
-    return res.status(401).send({ success: false });
+    console.log('user does not exist');
+    res.status(401).send({ success: false });
   } else {
+    console.log('user exists');
     const user = await database.getUserByUserName(username);
     let passwordOk;
     if (user[0].passwordHash) {
+      console.log('password hash available');
       passwordOk = await argon2.verify(user[0].passwordHash, password);
     }
 
     if (passwordOk) {
+      console.log('password ok');
+
       const sessionToken = crypto.randomBytes(24).toString('base64');
-      if (user && token) {
+      if (user && sessionToken) {
         console.log('user.customerId: ', user[0].customerId);
-        database.createSession(user[0].customerId, token);
-        cookies.setCookiesClientSide('token', JSON.stringify(sessionToken));
-        return res.status(200).send({ success: true });
+        database.createSession(user[0].customerId, sessionToken);
+        console.log('sessionToken: ', sessionToken);
+        console.log('cookies: ', cookies.getAllCookiesClientSide());
+        cookies.setCookiesClientSide('token', sessionToken);
+        res.status(200).send({
+          success: true,
+          token: sessionToken,
+          isAdmin: user[0].admin,
+        });
       }
     } else {
-      return res.status(401).send({ success: false });
+      res.status(401).send({ success: false });
     }
   }
-  return res.status(200).send({ success: true });
+  //return res.status(200).send({ success: true });
 }

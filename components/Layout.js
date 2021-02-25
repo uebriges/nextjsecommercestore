@@ -2,7 +2,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   appAreaStyles,
   mainStyles,
@@ -11,8 +11,12 @@ import {
   searchBarStyles,
 } from '../styles/styles';
 import cookies from '../utils/cookies';
+import { UserContext } from './UserContext';
 
 export default function Layout(props) {
+  const { userState } = useContext(UserContext);
+  console.log('userState: ', userState);
+
   return (
     <>
       <Head>
@@ -58,7 +62,9 @@ export default function Layout(props) {
                 <div></div>
               )}
               <div className="userProfileLink">
-                <Link href="/user/login">
+                <Link
+                  href={userState.username ? '/user/profile' : '/user/login'}
+                >
                   <a>
                     <Image
                       className="userProfileImage"
@@ -68,11 +74,9 @@ export default function Layout(props) {
                       alt="User profile"
                     />
                     {/* For later: If website visitor is logged in, user name is displayed */}
-                    {true ? (
-                      <div className="userProfileName" />
-                    ) : (
-                      <div className="userProfileName">User name</div>
-                    )}
+                    <div className="userProfileName">
+                      {userState.username ? userState.username : ''}
+                    </div>
                   </a>
                 </Link>
               </div>

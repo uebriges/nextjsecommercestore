@@ -4,6 +4,10 @@ export function setCookiesClientSide(key, value) {
   return Cookies.set(key, value);
 }
 
+export function getAllCookiesClientSide() {
+  return Cookies.get();
+}
+
 export function getCookiesClientSide(key) {
   return Cookies.get(key);
 }
@@ -39,4 +43,5 @@ module.exports = {
   getCookiesClientSide,
   updateCartTotalQuantity,
   getShoppingCartProductIds,
+  getAllCookiesClientSide,
 };

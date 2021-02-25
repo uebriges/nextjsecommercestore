@@ -6,6 +6,7 @@ import {
   ACTIONS,
   ShoppingCartContext,
 } from '../../components/ShoppingCartContext';
+import { UserContext } from '../../components/UserContext';
 import { checkoutStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
 
@@ -39,6 +40,7 @@ export default function Checkout(props) {
       ? JSON.parse(cookies.getCookiesClientSide('shoppingCart'))
       : props.shoppingCart,
   );
+  const { userState } = useContext(UserContext);
 
   // Toggle billing information changeability
 
@@ -68,6 +70,7 @@ export default function Checkout(props) {
     });
 
     // Store order
+    console.log('userstate customer id: ', userState.customerId);
 
     const response = await fetch('/api/order', {
       method: 'POST',
@@ -77,7 +80,7 @@ export default function Checkout(props) {
       body: JSON.stringify({
         shoppingCart: state,
         deliveryOptionId: premiumDelivery === true ? 2 : 1,
-        customerId: 3,
+        customerId: userState.userId,
       }),
     });
     const orderId = await response.json();

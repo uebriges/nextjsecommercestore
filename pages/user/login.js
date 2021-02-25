@@ -48,6 +48,7 @@ export default function Login(props) {
           username,
           isAdmin:
             result.isAdmin === null || result.isAdmin === false ? false : true,
+          userId: result.customerId,
         },
       });
       router.push('/');

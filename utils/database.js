@@ -190,12 +190,55 @@ export async function registerUser(username, email, password) {
 
 export async function createSession(userId, token) {
   const date = new Date();
-  const session = sql`
+  const session = await sql`
     INSERT INTO sessions
       (user_id, token)
     VALUES
       (${userId}, ${token})
   `;
+}
+
+export async function updateProduct(
+  productId,
+  productDescription,
+  pricePerUnit,
+) {
+  const product = await sql`
+    UPDATE products
+    SET
+      price_per_unit = ${Number(pricePerUnit)},
+      product_description = ${productDescription}
+    WHERE product_id = ${productId}
+    RETURNING product_id;
+  `;
+  return product.map((currentProduct) => camelCaseKeys(currentProduct));
+}
+
+export async function deleteProduct(productId) {
+  const deletedProductId = await sql`
+    DELETE FROM
+      products
+    WHERE
+      product_id = ${productId}
+    RETURNING product_id;
+  `;
+  console.log('deletedProductId: ', deletedProductId);
+  return deletedProductId.map((currentProduct) =>
+    camelCaseKeys(currentProduct),
+  );
+}
+
+export async function isSessionValid(productId) {
+  const deletedProductId = await sql`
+    DELETE FROM
+      products
+    WHERE
+      product_id = ${productId}
+    RETURNING product_id;
+  `;
+  return deletedProductId.map((currentProduct) =>
+    camelCaseKeys(currentProduct),
+  );
 }
 
 module.exports = {
@@ -207,21 +250,20 @@ module.exports = {
   passwordValid: passwordValid,
   createSession: createSession,
   getUserByUserName: getUserByUserName,
+  updateProduct: updateProduct,
+  deleteProduct: deleteProduct,
 };
 
-// export async function getSingleProduct(id) {
-//   return camelCaseKeys(
-//     await sql`select products.product_id, products.product_name, products.production_year, products.price_per_unit, products.product_description, products.producer, products.inventory, STRING_AGG (cast(image_data as varchar),';') as images_per_product from products, products_images, images where products.product_id = products_images.product_id group by products.product_id order by 1;`,
-//   );
-// }
-
-// export async function getProductImageLinks() {
-//   return camelCaseKeys(
-//     await sql`select product_id, STRING_AGG (cast(image_data as varchar),', ') as ImagesPerProduct from products_images, images group by product_id order by 1;`,
-//   );
-// }
-
-// select image_data from products_images inner join images on  products_images.product_id = ${product_id};
-// select image_data from products_images inner join images on  products_images.product_id = ${product_id} // lists all image paths of a specific product
-// select product_id, STRING_AGG (cast(image_data as varchar),', ') as ImagesPerProduct from products_images, images group by product_id order by 1; // lists all images_id and corresponding image paths
-// select product_id, STRING_AGG (cast(image_data as varchar),', ') as ImagesPerProduct from products_images, images where product_id = 3 group by product_id order by 1; // lists image paths of product with product_id = 3
+// SELECT
+//     products.product_id,
+//     products.product_name,
+//     products.production_year,
+//     products.price_per_unit,
+//     products.product_description,
+//     products.producer,
+//     products.inventory,
+//     STRING_AGG (cast(image_data as varchar),';') as images_per_product
+//   FROM products, products_images, images
+//   WHERE products.product_id = products_images.product_id
+//   GROUP BY products.product_id
+//   ORDER BY 1;

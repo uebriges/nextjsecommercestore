@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
+import { UserContext } from '../../components/UserContext';
 import { productPageStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
 import Error404 from '../404';
@@ -9,6 +10,32 @@ import AddToCart from './AddToCart';
 
 export default function SingleProduct(props) {
   const [totalQuantity, setTotalQuantity] = useState();
+  const { userState } = useContext(UserContext);
+  const [productDescription, setProductDescription] = useState(
+    props.product.productDescription,
+  );
+  const [pricePerUnit, setPricePerUnit] = useState(props.product.pricePerUnit);
+  const [updateProductMessage, setUpdateProductMessage] = useState('');
+
+  async function saveChanges() {
+    const response = await fetch('/api/updateProduct', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        productId: props.product.productId,
+        productDescription,
+        pricePerUnit,
+      }),
+    });
+    const result = await response.json();
+    response.status === 200
+      ? setUpdateProductMessage('Product updated')
+      : setUpdateProductMessage(
+          'Something went wrong. Please try it again later.',
+        );
+  }
 
   useEffect(() => {
     setTotalQuantity(cookies.updateCartTotalQuantity());
@@ -25,7 +52,7 @@ export default function SingleProduct(props) {
       <div css={productPageStyles}>
         {/* For later: If admin is logged in, button for adding images is shown */}
         <div className="singleProductImages">
-          {true ? (
+          {!userState.isAdmin ? (
             <div></div>
           ) : (
             <div>
@@ -53,18 +80,41 @@ export default function SingleProduct(props) {
           })}
         </div>
         <div className="singleProductDescription">
-          {props.product.productDescription}
+          {userState.isAdmin ? (
+            <textarea
+              defaultValue={props.product.productDescription}
+              onChange={(event) => setProductDescription(event.target.value)}
+              stlye={{ height: '300px' }}
+              rows="30"
+              cols="50"
+            />
+          ) : (
+            props.product.productDescription
+          )}
         </div>
         <div className="singleProductAddToCart">
-          <div>Price: {props.product.pricePerUnit}</div>
+          <div>
+            Price:
+            {userState.isAdmin ? (
+              <input
+                defaultValue={props.product.pricePerUnit}
+                onChange={(event) => setPricePerUnit(event.target.value)}
+              />
+            ) : (
+              props.product.pricePerUnit
+            )}
+          </div>
           {/* For later: If admin is logged in, AddToCart is not shown  */}
-          {true ? (
+          {!userState.isAdmin ? (
             <AddToCart
               product={props.product}
               setTotalQuantity={setTotalQuantity}
             />
           ) : (
-            <div></div>
+            <>
+              <button onClick={saveChanges}>Update product</button>
+              <p>{updateProductMessage}</p>
+            </>
           )}
         </div>
       </div>

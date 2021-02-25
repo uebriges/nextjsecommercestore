@@ -2,18 +2,48 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useContext, useState } from 'react';
 import Layout from '../components/Layout';
+import { UserContext } from '../components/UserContext';
 import { productPageStyles } from '../styles/styles';
 
 export default function Home(props) {
-  props.products.splice(-2);
+  const { userState } = useContext(UserContext);
+  const [products, setProducts] = useState(props.products);
+
+  async function deleteProduct(event) {
+    console.log('key: ', event.target.id);
+    if (window.confirm('Delete product?')) {
+      const response = await fetch('/api/deleteProduct', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: event.target.id,
+        }),
+      });
+      const result = await response.json();
+      console.log('result: ', result);
+
+      if (result.deletedProductId) {
+        setProducts(
+          products.filter(
+            (currentProduct) =>
+              !(currentProduct.productId === Number(result.deletedProductId)),
+          ),
+        );
+      }
+    }
+  }
+
   return (
     <Layout>
       <Head>
         <title>Vino</title>
       </Head>
       <div css={productPageStyles}>
-        {props.products.map((element, index) => {
+        {products.map((element, index) => {
           return (
             <div key={'singleProduct' + index}>
               <Link
@@ -39,6 +69,9 @@ export default function Home(props) {
               <div key={'productPricePerUnit' + index}>
                 {element.pricePerUnit}
               </div>
+              <button id={element.productId} onClick={deleteProduct}>
+                Delete product
+              </button>
             </div>
           );
         })}
@@ -49,7 +82,7 @@ export default function Home(props) {
 
 export async function getServerSideProps(context) {
   const database = require('../utils/database');
-  const getAllProducts = database.getAllProducts;
+  const getAllProducts = await database.getAllProducts;
   const products = await getAllProducts();
 
   return {

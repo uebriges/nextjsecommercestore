@@ -74,15 +74,6 @@ export default function ShoppingCart(props) {
     console.log('test delete: ', test);
     console.log('State after deletion: ', state);
     console.log('shopping cart after deletion: ', state);
-    // dispatch({
-    //   type: ACTIONS.GET_CART,
-    //   payload: {
-    //     shoppingCart: shoppingCart,
-    //     additionalInfo: props.additionalInfo,
-    //   },
-    // });
-    //setShoppingCart(state);
-    // Router.push('/shoppingCart');
   }
 
   // After mount

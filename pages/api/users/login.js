@@ -57,6 +57,7 @@ export default async function handler(req, res) {
           success: true,
           token: sessionToken,
           isAdmin: user[0].admin,
+          customerId: user[0].customerId,
         });
       }
     } else {

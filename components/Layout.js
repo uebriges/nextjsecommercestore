@@ -44,7 +44,7 @@ export default function Layout(props) {
             <div className="menu" css={menuStyles}>
               {/* For later: If administrator is logged in, no shopping cart */}
 
-              {true ? (
+              {!userState.isAdmin ? (
                 <div>
                   <Link href="/shoppingCart">
                     <a>

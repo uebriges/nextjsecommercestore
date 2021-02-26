@@ -6,7 +6,7 @@ export default function Thankyou(props) {
   }
 
   return (
-    <Layout>
+    <Layout loggedInUser={props.loggedInUser}>
       <div>
         <p>Thank you for your order.</p>{' '}
         <p>Your order number is: {props.orderId}</p>
@@ -20,7 +20,20 @@ export default function Thankyou(props) {
   );
 }
 
-export function getServerSideProps(context) {
+export async function getServerSideProps(context) {
+  const database = require('../../utils/database');
   console.log('id: ', context.params);
-  return { props: { orderId: context.params.orderId } };
+
+  const nextCookies = require('next-cookies');
+  const token = nextCookies(context).token;
+  let loggedInUser;
+
+  if (token) {
+    loggedInUser = (await database.getUserByToken(token))[0];
+  } else {
+    loggedInUser = null;
+  }
+  return {
+    props: { orderId: context.params.orderId, loggedInUser: loggedInUser },
+  };
 }

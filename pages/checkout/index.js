@@ -100,7 +100,7 @@ export default function Checkout(props) {
   });
 
   return (
-    <Layout>
+    <Layout loggedInUser={props.loggedInUser}>
       <div css={checkoutStyles}>
         <div className="checkoutInformation">
           <h2>Please check your order and your delivery/billing information</h2>
@@ -243,6 +243,16 @@ export async function getServerSideProps(context) {
   let additionalInfo;
   let shoppingCart;
 
+  const nextCookies = require('next-cookies');
+  const token = nextCookies(context).token;
+  let loggedInUser;
+
+  if (token) {
+    loggedInUser = (await database.getUserByToken(token))[0];
+  } else {
+    loggedInUser = null;
+  }
+
   if (context.req.cookies.shoppingCart) {
     additionalInfo = await database.getAdditionalInfoForCartItemsCookie(
       JSON.parse(context.req.cookies.shoppingCart),
@@ -255,6 +265,7 @@ export async function getServerSideProps(context) {
     props: {
       additionalInfo: additionalInfo || null,
       shoppingCart: shoppingCart || null,
+      loggedInUser: loggedInUser || null,
     }, // will be passed to the page component as props
   };
 }

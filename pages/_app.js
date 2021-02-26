@@ -1,7 +1,7 @@
 import { Global } from '@emotion/react';
-import { ShoppingCartContextProvider } from '../components/ShoppingCartContext';
-import { UserContextProvider } from '../components/UserContext';
 import { globalStyles } from '../styles/styles';
+import { ShoppingCartContextProvider } from '../utils/ShoppingCartContext';
+import { UserContextProvider } from '../utils/UserContext';
 
 function MyApp({ Component, pageProps }) {
   return (

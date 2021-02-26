@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import cookies from '../utils/cookies';
+import cookies from './cookies';
 
 export const ACTIONS = {
   DELETE_FROM_CART: 'delete-from-cart',

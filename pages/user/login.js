@@ -3,8 +3,8 @@ import Link from 'next/link';
 import router from 'next/router';
 import { useContext, useState } from 'react';
 import Layout from '../../components/Layout';
-import { ACTIONS, UserContext } from '../../components/UserContext';
 import cookies from '../../utils/cookies';
+import { ACTIONS, UserContext } from '../../utils/UserContext';
 
 export default function Login(props) {
   const [username, setUserName] = useState('');
@@ -55,7 +55,7 @@ export default function Login(props) {
     }
   }
   return (
-    <Layout>
+    <Layout loggedInUser={props.loggedInUser}>
       <div>
         <div>
           <form onSubmit={login}>
@@ -84,7 +84,19 @@ export default function Login(props) {
   );
 }
 
-export function getServerSideProps(context) {
+export async function getServerSideProps(context) {
+  const database = require('../../utils/database');
+  const nextCookies = require('next-cookies');
+
+  const cookieToken = nextCookies(context).token;
+  let loggedInUser;
+
+  if (cookieToken) {
+    loggedInUser = (await database.getUserByToken(cookieToken))[0];
+  } else {
+    loggedInUser = null;
+  }
+
   const tokens = new Tokens();
   const secret = process.env.CSRF_TOKEN_SECRET;
 
@@ -94,5 +106,5 @@ export function getServerSideProps(context) {
 
   const token = tokens.create(secret);
 
-  return { props: { token } };
+  return { props: { token, loggedInUser: loggedInUser || null } };
 }

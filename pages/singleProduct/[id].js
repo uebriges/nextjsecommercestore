@@ -2,9 +2,9 @@
 import Image from 'next/image';
 import { useContext, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
-import { UserContext } from '../../components/UserContext';
 import { productPageStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
+import { UserContext } from '../../utils/UserContext';
 import Error404 from '../404';
 import AddToCart from './AddToCart';
 
@@ -16,6 +16,8 @@ export default function SingleProduct(props) {
   );
   const [pricePerUnit, setPricePerUnit] = useState(props.product.pricePerUnit);
   const [updateProductMessage, setUpdateProductMessage] = useState('');
+
+  console.log('props logged in user single prod: ', props.loggedInUser);
 
   async function saveChanges() {
     const response = await fetch('/api/updateProduct', {
@@ -48,13 +50,11 @@ export default function SingleProduct(props) {
   const images = props.product.imagesPerProduct.split(';');
 
   return (
-    <Layout>
+    <Layout loggedInUser={props.loggedInUser}>
       <div css={productPageStyles}>
         {/* For later: If admin is logged in, button for adding images is shown */}
         <div className="singleProductImages">
-          {!userState.isAdmin ? (
-            <div></div>
-          ) : (
+          {props.loggedInUser && props.loggedInUser.isAdmin ? (
             <div>
               <button value="Add images" className="addImagesButton">
                 <Image
@@ -65,6 +65,8 @@ export default function SingleProduct(props) {
                 />
               </button>
             </div>
+          ) : (
+            <div></div>
           )}
 
           {images.map((picture, index) => {
@@ -80,7 +82,7 @@ export default function SingleProduct(props) {
           })}
         </div>
         <div className="singleProductDescription">
-          {userState.isAdmin ? (
+          {props.loggedInUser && props.loggedInUser.isAdmin ? (
             <textarea
               defaultValue={props.product.productDescription}
               onChange={(event) => setProductDescription(event.target.value)}
@@ -95,7 +97,7 @@ export default function SingleProduct(props) {
         <div className="singleProductAddToCart">
           <div>
             Price:
-            {userState.isAdmin ? (
+            {props.loggedInUser && props.loggedInUser.isAdmin ? (
               <input
                 defaultValue={props.product.pricePerUnit}
                 onChange={(event) => setPricePerUnit(event.target.value)}
@@ -105,16 +107,16 @@ export default function SingleProduct(props) {
             )}
           </div>
           {/* For later: If admin is logged in, AddToCart is not shown  */}
-          {!userState.isAdmin ? (
-            <AddToCart
-              product={props.product}
-              setTotalQuantity={setTotalQuantity}
-            />
-          ) : (
+          {props.loggedInUser && props.loggedInUser.isAdmin ? (
             <>
               <button onClick={saveChanges}>Update product</button>
               <p>{updateProductMessage}</p>
             </>
+          ) : (
+            <AddToCart
+              product={props.product}
+              setTotalQuantity={setTotalQuantity}
+            />
           )}
         </div>
       </div>
@@ -124,6 +126,21 @@ export default function SingleProduct(props) {
 
 export async function getServerSideProps(context) {
   const database = require('../../utils/database');
+  const nextCookies = require('next-cookies');
+  let token = nextCookies(context).token;
+  let loggedInUser;
+
+  console.log('single product: token', token);
+  if (token) {
+    loggedInUser = (await database.getUserByToken(token))[0];
+  } else {
+    loggedInUser = null;
+  }
+
+  console.log('single product: loggedInUser', loggedInUser);
+  console.log('single product: ');
+  console.log('single product: ');
+
   const getAllProducts = database.getAllProducts;
   const products = await getAllProducts();
   const product = products.find((element) => {
@@ -134,8 +151,7 @@ export async function getServerSideProps(context) {
     context.res.statusCode = 404;
   }
 
-  //console.log('Cookies: ', context.req.cookies);
   return {
-    props: { product: product || null }, // will be passed to the page component as props
+    props: { product: product || null, loggedInUser: loggedInUser || null }, // will be passed to the page component as props
   };
 }

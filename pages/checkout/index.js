@@ -2,13 +2,10 @@
 import router from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
-import {
-  ACTIONS,
-  ShoppingCartContext,
-} from '../../components/ShoppingCartContext';
-import { UserContext } from '../../components/UserContext';
 import { checkoutStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
+import { ACTIONS, ShoppingCartContext } from '../../utils/ShoppingCartContext';
+import { UserContext } from '../../utils/UserContext';
 
 export default function Checkout(props) {
   // states and contexts

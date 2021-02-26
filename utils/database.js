@@ -228,17 +228,39 @@ export async function deleteProduct(productId) {
   );
 }
 
-export async function isSessionValid(productId) {
-  const deletedProductId = await sql`
-    DELETE FROM
-      products
+export async function isSessionValid(token) {
+  const sessions = await sql`
+    SELECT *
+    FROM
+      sessions
     WHERE
-      product_id = ${productId}
-    RETURNING product_id;
+      token = ${token}
   `;
-  return deletedProductId.map((currentProduct) =>
-    camelCaseKeys(currentProduct),
-  );
+  return sessions.map((currentSession) => camelCaseKeys(currentSession));
+}
+
+export async function getUserByToken(token) {
+  console.log('db token: ', token);
+  let user = await sql`
+  SELECT
+    customers.customer_id as id,
+    admin as is_admin,
+    user_name,
+    sessions.expiry_timestamp as timestamp
+  FROM
+    sessions,
+    customers
+  WHERE
+    token = ${token}
+    AND sessions.user_id = customers.customer_id;`;
+
+  console.log('db user: ', user);
+
+  user = user[0].timestamp < new Date() ? [] : user;
+  user[0].timestamp = '';
+  console.log('user db: ', user);
+
+  return user.map((currentUser) => camelCaseKeys(currentUser));
 }
 
 module.exports = {
@@ -252,6 +274,7 @@ module.exports = {
   getUserByUserName: getUserByUserName,
   updateProduct: updateProduct,
   deleteProduct: deleteProduct,
+  getUserByToken: getUserByToken,
 };
 
 // SELECT

@@ -4,12 +4,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useContext, useState } from 'react';
 import Layout from '../components/Layout';
-import { UserContext } from '../components/UserContext';
 import { productPageStyles } from '../styles/styles';
+import { UserContext } from '../utils/UserContext';
 
 export default function Home(props) {
-  const { userState } = useContext(UserContext);
+  const { userState, dispatchUserState } = useContext(UserContext);
   const [products, setProducts] = useState(props.products);
+
+  console.log('UserState: ', userState);
+  console.log('Logged in user: ', props.loggedInUser);
 
   async function deleteProduct(event) {
     console.log('key: ', event.target.id);
@@ -38,7 +41,7 @@ export default function Home(props) {
   }
 
   return (
-    <Layout>
+    <Layout loggedInUser={props.loggedInUser}>
       <Head>
         <title>Vino</title>
       </Head>
@@ -69,9 +72,11 @@ export default function Home(props) {
               <div key={'productPricePerUnit' + index}>
                 {element.pricePerUnit}
               </div>
-              <button id={element.productId} onClick={deleteProduct}>
-                Delete product
-              </button>
+              {props.loggedInUser && props.loggedInUser.isAdmin ? (
+                <button id={element.productId} onClick={deleteProduct}>
+                  Delete product
+                </button>
+              ) : null}
             </div>
           );
         })}
@@ -82,12 +87,23 @@ export default function Home(props) {
 
 export async function getServerSideProps(context) {
   const database = require('../utils/database');
+  const nextCookies = require('next-cookies');
+  let token = nextCookies(context).token;
+  let loggedInUser;
+
+  if (token) {
+    loggedInUser = (await database.getUserByToken(token))[0];
+  } else {
+    loggedInUser = null;
+  }
+
   const getAllProducts = await database.getAllProducts;
   const products = await getAllProducts();
 
   return {
     props: {
       products: products || null,
+      loggedInUser: loggedInUser || null,
     }, // will be passed to the page component as props
   };
 }

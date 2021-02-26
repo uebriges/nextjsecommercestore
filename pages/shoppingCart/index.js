@@ -2,12 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useContext, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
-import {
-  ACTIONS,
-  ShoppingCartContext,
-} from '../../components/ShoppingCartContext';
 import { shoppingCartStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
+import { ACTIONS, ShoppingCartContext } from '../../utils/ShoppingCartContext';
 
 export default function ShoppingCart(props) {
   // States and Contexts
@@ -91,7 +88,7 @@ export default function ShoppingCart(props) {
   }, [dispatch, props.additionalInfo, shoppingCart]);
 
   return (
-    <Layout>
+    <Layout loggedInUser={props.loggedInUser}>
       <div css={shoppingCartStyles}>
         <div>
           {state.length !== 0 ? (
@@ -170,8 +167,19 @@ export default function ShoppingCart(props) {
 
 export async function getServerSideProps(context) {
   const database = require('../../utils/database');
+  const nextCookies = require('next-cookies');
   let additionalInfo;
   let shoppingCart;
+
+  const token = nextCookies(context).token;
+  let loggedInUser;
+
+  console.log('single product: token', token);
+  if (token) {
+    loggedInUser = (await database.getUserByToken(token))[0];
+  } else {
+    loggedInUser = null;
+  }
 
   if (context.req.cookies.shoppingCart) {
     additionalInfo = await database.getAdditionalInfoForCartItemsCookie(
@@ -184,6 +192,7 @@ export async function getServerSideProps(context) {
     props: {
       additionalInfo: additionalInfo || null,
       shoppingCart: shoppingCart || null,
+      loggedInUser: loggedInUser || null,
     }, // will be passed to the page component as props
   };
 }

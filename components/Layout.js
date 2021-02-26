@@ -11,11 +11,20 @@ import {
   searchBarStyles,
 } from '../styles/styles';
 import cookies from '../utils/cookies';
-import { UserContext } from './UserContext';
+import { UserContext } from '../utils/UserContext';
 
 export default function Layout(props) {
   const { userState } = useContext(UserContext);
-  console.log('userState: ', userState);
+
+  console.log('props: ', props);
+  // console.log('userState bla: ', userState);
+
+  // dispatchUserState({
+  //   type: ACTIONS.GET_USER_BY_TOKEN,
+  //   payload: {
+  //     token: cookies.getCookiesClientSide('token'),
+  //   },
+  // });
 
   return (
     <>
@@ -63,7 +72,7 @@ export default function Layout(props) {
               )}
               <div className="userProfileLink">
                 <Link
-                  href={userState.username ? '/user/profile' : '/user/login'}
+                  href={props.loggedInUser ? '/user/profile' : '/user/login'}
                 >
                   <a>
                     <Image
@@ -73,10 +82,13 @@ export default function Layout(props) {
                       width={60}
                       alt="User profile"
                     />
-                    {/* For later: If website visitor is logged in, user name is displayed */}
-                    <div className="userProfileName">
-                      {userState.username ? userState.username : ''}
-                    </div>
+                    {props.loggedInUser ? (
+                      <div className="userProfileName">
+                        {props.loggedInUser ? props.loggedInUser.userName : ''}
+                      </div>
+                    ) : (
+                      <div></div>
+                    )}
                   </a>
                 </Link>
               </div>

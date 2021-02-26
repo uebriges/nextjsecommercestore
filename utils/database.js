@@ -198,6 +198,18 @@ export async function createSession(userId, token) {
   `;
 }
 
+export async function deleteSession(token) {
+  const deletedSession = await sql`
+    DELETE FROM
+      sessions
+    WHERE
+      token = ${token}
+    RETURNING *;
+  `;
+
+  return deletedSession.map((currentSession) => camelCaseKeys(currentSession));
+}
+
 export async function updateProduct(
   productId,
   productDescription,
@@ -275,6 +287,7 @@ module.exports = {
   updateProduct: updateProduct,
   deleteProduct: deleteProduct,
   getUserByToken: getUserByToken,
+  deleteSession: deleteSession,
 };
 
 // SELECT

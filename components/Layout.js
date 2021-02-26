@@ -16,7 +16,6 @@ import { UserContext } from '../utils/UserContext';
 export default function Layout(props) {
   const { userState } = useContext(UserContext);
 
-  console.log('props: ', props);
   // console.log('userState bla: ', userState);
 
   // dispatchUserState({

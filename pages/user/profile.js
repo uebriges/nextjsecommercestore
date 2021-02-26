@@ -1,18 +1,32 @@
 import Router from 'next/router';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import Layout from '../../components/Layout';
 import cookies from '../../utils/cookies';
 import { ACTIONS, UserContext } from '../../utils/UserContext';
 
 export default function Profile(props) {
   const { userState, dispatchUserState } = useContext(UserContext);
+  const [errorMessage, setErrorMessage] = useState('');
 
   async function logout() {
-    dispatchUserState({ type: ACTIONS.LOGOUT });
+    console.log('props.token: ', props.token);
+    const response = await fetch('/api/deleteSession', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: props.token }),
+    });
+    const deletedSession = await response.json();
+    console.log('deletedSession: ', deletedSession);
+
+    deletedSession
+      ? Router.push('/user/login')
+      : setErrorMessage('Logout failed.');
+
     cookies.setCookiesClientSide('token', '');
-    Router.push('/user/login');
+    dispatchUserState({ type: ACTIONS.LOGOUT });
   }
-  console.log('userstate userprofile: ', userState);
 
   if (!props.loggedInUser) {
     Router.push('/');
@@ -35,6 +49,8 @@ export async function getServerSideProps(context) {
   const nextCookies = require('next-cookies');
 
   const cookieToken = nextCookies(context).token;
+  console.log('cookiesToken: ', cookieToken);
+
   let loggedInUser;
 
   if (cookieToken) {
@@ -43,5 +59,7 @@ export async function getServerSideProps(context) {
     loggedInUser = null;
   }
 
-  return { props: { loggedInUser: loggedInUser || null } };
+  return {
+    props: { loggedInUser: loggedInUser || null, token: cookieToken || null },
+  };
 }

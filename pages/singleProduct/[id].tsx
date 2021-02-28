@@ -1,14 +1,31 @@
 /** @jsxImportSource @emotion/react */
+import { GetServerSidePropsContext } from 'next';
 import Image from 'next/image';
 import { useContext, useEffect, useState } from 'react';
-import Layout from '../../components/Layout';
+import Layout, { LoggedInUserType } from '../../components/Layout';
 import { productPageStyles } from '../../styles/styles';
-import cookies from '../../utils/cookies';
+import * as cookies from '../../utils/cookies';
 import { UserContext } from '../../utils/UserContext';
 import Error404 from '../404';
 import AddToCart from './AddToCart';
 
-export default function SingleProduct(props) {
+type ProductType = {
+  productId: number;
+  productName: string;
+  productionYear: number;
+  pricePerUnit: number;
+  productDescription: string;
+  producer: string;
+  inventory: string;
+  imagesPerProduct: string;
+};
+
+type SingleProductType = {
+  product: ProductType;
+  loggedInUser: LoggedInUserType;
+};
+
+export default function SingleProduct(props: SingleProductType) {
   const [totalQuantity, setTotalQuantity] = useState();
   const { userState } = useContext(UserContext);
   const [productDescription, setProductDescription] = useState(
@@ -16,8 +33,6 @@ export default function SingleProduct(props) {
   );
   const [pricePerUnit, setPricePerUnit] = useState(props.product.pricePerUnit);
   const [updateProductMessage, setUpdateProductMessage] = useState('');
-
-  console.log('props logged in user single prod: ', props.loggedInUser);
 
   async function saveChanges() {
     const response = await fetch('/api/updateProduct', {
@@ -65,9 +80,7 @@ export default function SingleProduct(props) {
                 />
               </button>
             </div>
-          ) : (
-            <div></div>
-          )}
+          ) : null}
 
           {images.map((picture, index) => {
             return (
@@ -86,9 +99,9 @@ export default function SingleProduct(props) {
             <textarea
               defaultValue={props.product.productDescription}
               onChange={(event) => setProductDescription(event.target.value)}
-              stlye={{ height: '300px' }}
-              rows="30"
-              cols="50"
+              style={{ height: '300px' }}
+              rows={30}
+              cols={50}
             />
           ) : (
             props.product.productDescription
@@ -100,13 +113,16 @@ export default function SingleProduct(props) {
             {props.loggedInUser && props.loggedInUser.isAdmin ? (
               <input
                 defaultValue={props.product.pricePerUnit}
-                onChange={(event) => setPricePerUnit(event.target.value)}
+                onChange={(event) =>
+                  setPricePerUnit(
+                    Number((event.target as HTMLInputElement).value),
+                  )
+                }
               />
             ) : (
               props.product.pricePerUnit
             )}
           </div>
-          {/* For later: If admin is logged in, AddToCart is not shown  */}
           {props.loggedInUser && props.loggedInUser.isAdmin ? (
             <>
               <button onClick={saveChanges}>Update product</button>
@@ -124,31 +140,28 @@ export default function SingleProduct(props) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const database = require('../../utils/database');
   const nextCookies = require('next-cookies');
-  let token = nextCookies(context).token;
+  const token = nextCookies(context).token;
   let loggedInUser;
 
-  console.log('single product: token', token);
   if (token) {
     loggedInUser = (await database.getUserByToken(token))[0];
   } else {
     loggedInUser = null;
   }
 
-  console.log('single product: loggedInUser', loggedInUser);
-  console.log('single product: ');
-  console.log('single product: ');
-
   const getAllProducts = database.getAllProducts;
   const products = await getAllProducts();
-  const product = products.find((element) => {
+  const product = products.find((element: ProductType) => {
     return element.productId.toString() === context.query.id;
   });
 
   if (!product) {
-    context.res.statusCode = 404;
+    if (context.res) {
+      context.res.statusCode = 404;
+    }
   }
 
   return {

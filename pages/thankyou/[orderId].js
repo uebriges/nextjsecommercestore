@@ -22,7 +22,6 @@ export default function Thankyou(props) {
 
 export async function getServerSideProps(context) {
   const database = require('../../utils/database');
-  console.log('id: ', context.params);
 
   const nextCookies = require('next-cookies');
   const token = nextCookies(context).token;

@@ -1,16 +1,16 @@
-import database from '../../utils/database';
+import { NextApiRequest, NextApiResponse } from 'next';
+import * as database from '../../utils/database';
 
-export default async function updateProduct(req, res) {
-  const respBody = {};
-  console.log(req.body);
+export default async function updateProduct(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   const { productId, productDescription, pricePerUnit } = req.body;
-  console.log('pricePerUnit db: ', pricePerUnit);
   const updatedProduct = await database.updateProduct(
     productId,
     productDescription,
     pricePerUnit,
   );
-  console.log('updated product: ', updatedProduct);
 
   return updatedProduct[0].productId
     ? res.status(200).send({})

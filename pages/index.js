@@ -11,11 +11,7 @@ export default function Home(props) {
   const { userState, dispatchUserState } = useContext(UserContext);
   const [products, setProducts] = useState(props.products);
 
-  console.log('UserState: ', userState);
-  console.log('Logged in user: ', props.loggedInUser);
-
   async function deleteProduct(event) {
-    console.log('key: ', event.target.id);
     if (window.confirm('Delete product?')) {
       const response = await fetch('/api/deleteProduct', {
         method: 'DELETE',
@@ -27,7 +23,6 @@ export default function Home(props) {
         }),
       });
       const result = await response.json();
-      console.log('result: ', result);
 
       if (result.deletedProductId) {
         setProducts(

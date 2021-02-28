@@ -12,8 +12,6 @@ export default function Register(props) {
 
   async function register(event) {
     event.preventDefault();
-    console.log('event: ', event);
-    console.log('username: ', username === '');
 
     if (password !== repeatedPassword || password === '') {
       setErrorMessage('Passwords missing or do not match.');

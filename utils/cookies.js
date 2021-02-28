@@ -14,11 +14,6 @@ export function getCookiesClientSide(key) {
 
 export function getShoppingCartProductIds() {
   const shoppingCart = Cookies.get('shoppingCart');
-  console.log('shoppingCart: ', shoppingCart);
-  // const idArray = shoppingCart.map((productInShoppingCart) => {
-  //   return productInShoppingCart.product_id;
-  // });
-  // return idArray;
 }
 
 export function updateCartTotalQuantity() {

@@ -1,4 +1,3 @@
-import argon2 from 'argon2';
 import camelCaseKeys from 'camelcase-keys';
 import postgres from 'postgres';
 
@@ -118,33 +117,24 @@ export async function persistOrder(shoppingCart, deliveryOptionId, customerId) {
 // Check if user name exists
 
 export async function userNameExists(username) {
-  console.log('db -> username: ', typeof username);
   const users = await sql`
     SELECT *
     FROM customers
     WHERE user_name = ${username};
   `;
 
-  console.log('user: ', users);
-  console.log(
-    'length: ',
-    users.map((user) => camelCaseKeys(user)).length !== 0,
-  );
   return users.length !== 0;
 }
 
 // Check if user name exists
 
 export async function getUserByUserName(username) {
-  console.log('db -> username: ', typeof username);
   const user = await sql`
     SELECT *
     FROM customers
     WHERE user_name = ${username};
   `;
 
-  console.log('user: ', user);
-  console.log('length: ', user.map((user) => camelCaseKeys(user)).length !== 0);
   if (user.length !== 0) {
     return user.map((user) => camelCaseKeys(user));
   } else {
@@ -155,10 +145,6 @@ export async function getUserByUserName(username) {
 // Check if password is valid
 
 export async function passwordValid(username, password) {
-  console.log('username: ', username);
-  console.log('password: ', password);
-  console.log('password argon: ', await argon2.hash(password));
-
   const users = await sql`
     SELECT *
     FROM customers
@@ -171,10 +157,6 @@ export async function passwordValid(username, password) {
 // Add new user/customer
 
 export async function registerUser(username, email, password) {
-  console.log('username: ', username);
-  console.log('email: ', email);
-  console.log('password: ', password);
-
   const user = await sql`
     INSERT INTO
       customers (
@@ -184,7 +166,6 @@ export async function registerUser(username, email, password) {
     VALUES (${username}, ${email}, ${password});
   `;
 
-  console.log('user: ', user);
   return user.map((user) => camelCaseKeys(user));
 }
 
@@ -234,7 +215,7 @@ export async function deleteProduct(productId) {
       product_id = ${productId}
     RETURNING product_id;
   `;
-  console.log('deletedProductId: ', deletedProductId);
+
   return deletedProductId.map((currentProduct) =>
     camelCaseKeys(currentProduct),
   );
@@ -252,7 +233,6 @@ export async function isSessionValid(token) {
 }
 
 export async function getUserByToken(token) {
-  console.log('db token: ', token);
   let user = await sql`
   SELECT
     customers.customer_id as id,
@@ -266,11 +246,8 @@ export async function getUserByToken(token) {
     token = ${token}
     AND sessions.user_id = customers.customer_id;`;
 
-  console.log('db user: ', user);
-
   user = user[0].timestamp < new Date() ? [] : user;
   user[0].timestamp = '';
-  console.log('user db: ', user);
 
   return user.map((currentUser) => camelCaseKeys(currentUser));
 }

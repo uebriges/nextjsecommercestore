@@ -19,7 +19,7 @@ export default function AddToCart(props) {
     setQuantityOfSingleProduct(Number(event.target.value));
   }
 
-  function addSingleProductToCart(event) {
+  function addSingleProductToCart() {
     // Check if product id already available in cookies
     // If true -> get value, add quantity, write new quantity into cookie
     // if false -> write quantity into cookie

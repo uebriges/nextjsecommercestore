@@ -10,20 +10,23 @@ import {
   navBarStyles,
   searchBarStyles,
 } from '../styles/styles';
-import cookies from '../utils/cookies';
+import * as cookies from '../utils/cookies';
 import { UserContext } from '../utils/UserContext';
 
-export default function Layout(props) {
+export interface LoggedInUserType {
+  id: string;
+  isAdmin: boolean;
+  userName: string;
+  timestamp: string;
+}
+
+interface LayoutProps {
+  loggedInUser: LoggedInUserType;
+  children: React.ReactNode;
+}
+
+export default function Layout(props: LayoutProps) {
   const { userState } = useContext(UserContext);
-
-  // console.log('userState bla: ', userState);
-
-  // dispatchUserState({
-  //   type: ACTIONS.GET_USER_BY_TOKEN,
-  //   payload: {
-  //     token: cookies.getCookiesClientSide('token'),
-  //   },
-  // });
 
   return (
     <>
@@ -66,9 +69,7 @@ export default function Layout(props) {
                   </Link>
                   <span>{cookies.updateCartTotalQuantity()}</span>
                 </div>
-              ) : (
-                <div></div>
-              )}
+              ) : null}
               <div className="userProfileLink">
                 <Link
                   href={props.loggedInUser ? '/user/profile' : '/user/login'}
@@ -85,9 +86,7 @@ export default function Layout(props) {
                       <div className="userProfileName">
                         {props.loggedInUser ? props.loggedInUser.userName : ''}
                       </div>
-                    ) : (
-                      <div></div>
-                    )}
+                    ) : null}
                   </a>
                 </Link>
               </div>

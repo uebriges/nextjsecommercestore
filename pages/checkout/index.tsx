@@ -1,20 +1,31 @@
 /** @jsxImportSource @emotion/react */
-import router from 'next/router';
+import { NextPageContext } from 'next';
+import { Router } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import { checkoutStyles } from '../../styles/styles';
-import cookies from '../../utils/cookies';
+import * as cookies from '../../utils/cookies';
 import { ACTIONS, ShoppingCartContext } from '../../utils/ShoppingCartContext';
 import { UserContext } from '../../utils/UserContext';
 
-export default function Checkout(props) {
-  // states and contexts
+export type CheckoutShoppingCartPropsType = {
+  additionalInfo: object;
+  shoppingCart: object;
+  loggedInUser: object;
+};
 
+type ShoppingCartStateType = {
+  pricePerUnit: string;
+  quantity: string;
+};
+
+export default function Checkout(props: CheckoutShoppingCartPropsType) {
+  // states and contexts
   const { dispatch, state } = useContext(ShoppingCartContext);
   const [sameBillingAddress, setSameBillingAddress] = useState(true);
   const [premiumDelivery, setPremiumDelivery] = useState(true);
-  const [nettoPrice, setNettoPrice] = useState(
-    state.reduce((lumpSum, shoppingCartItem) => {
+  const [nettoPrice] = useState(
+    state.reduce((lumpSum: number, shoppingCartItem: ShoppingCartStateType) => {
       return (
         lumpSum +
         Number(shoppingCartItem.pricePerUnit) *
@@ -22,7 +33,7 @@ export default function Checkout(props) {
       );
     }, 0),
   );
-  const [shippingCosts, setShippingCosts] = useState(() => {
+  const [shippingCosts] = useState(() => {
     if (
       (premiumDelivery && nettoPrice * 1.2 > 150) ||
       (!premiumDelivery && nettoPrice * 1.2 > 100)
@@ -32,7 +43,7 @@ export default function Checkout(props) {
       return 10;
     }
   });
-  const [shoppingCart, setShoppingCart] = useState(
+  const [shoppingCart] = useState(
     cookies.getCookiesClientSide('shoppingCart')
       ? JSON.parse(cookies.getCookiesClientSide('shoppingCart'))
       : props.shoppingCart,
@@ -41,15 +52,17 @@ export default function Checkout(props) {
 
   // Toggle billing information changeability
 
-  function activateBillingInformation(event) {
-    event.target.value === 'Yes'
+  function activateBillingInformation(
+    event: React.MouseEvent<HTMLInputElement>,
+  ) {
+    (event.target as HTMLInputElement).value === 'Yes'
       ? setSameBillingAddress(true)
       : setSameBillingAddress(false);
   }
 
   // Toggle delivery option
 
-  function handleDeliveryOption(event) {
+  function handleDeliveryOption(event: React.ChangeEvent<HTMLInputElement>) {
     setPremiumDelivery(event.target.value === 'premium' ? true : false);
   }
 
@@ -67,7 +80,6 @@ export default function Checkout(props) {
     });
 
     // Store order
-    console.log('userstate customer id: ', userState.customerId);
 
     const response = await fetch('/api/order', {
       method: 'POST',
@@ -86,7 +98,7 @@ export default function Checkout(props) {
       type: ACTIONS.EMPTY_CART,
     });
 
-    router.push('/thankyou/' + orderId);
+    Router.push('/thankyou/' + orderId);
   }
 
   useEffect(() => {
@@ -238,7 +250,7 @@ export default function Checkout(props) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: NextPageContext) {
   const database = require('../../utils/database');
   let additionalInfo;
   let shoppingCart;
@@ -253,19 +265,20 @@ export async function getServerSideProps(context) {
     loggedInUser = null;
   }
 
-  if (context.req.cookies.shoppingCart) {
-    additionalInfo = await database.getAdditionalInfoForCartItemsCookie(
-      JSON.parse(context.req.cookies.shoppingCart),
-    );
-    shoppingCart = JSON.parse(context.req.cookies.shoppingCart);
+  if (context.req) {
+    if (context.req.cookies.shoppingCart) {
+      additionalInfo = await database.getAdditionalInfoForCartItemsCookie(
+        JSON.parse(context.req.cookies.shoppingCart),
+      );
+      shoppingCart = JSON.parse(context.req.cookies.shoppingCart);
+    }
   }
-  console.log('cookies server side: ', shoppingCart);
 
   return {
     props: {
       additionalInfo: additionalInfo || null,
       shoppingCart: shoppingCart || null,
       loggedInUser: loggedInUser || null,
-    }, // will be passed to the page component as props
+    },
   };
 }

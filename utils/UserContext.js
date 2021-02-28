@@ -12,7 +12,6 @@ function userStateReducer(userState, action) {
   switch (action.type) {
     case ACTIONS.GET_USER_BY_TOKEN:
       let state;
-      console.log('token: ', action.payload.token);
       // Look for token
       fetch('/api/users/getUserByToken', {
         method: 'POST',
@@ -23,10 +22,8 @@ function userStateReducer(userState, action) {
           token: action.payload.token,
         }),
       }).then((result) => {
-        console.log('result: ', result);
         state = result;
       });
-      // console.log('result in dispatch: ', result);
 
       return state;
       break;
@@ -42,7 +39,6 @@ function userStateReducer(userState, action) {
         isAdmin: null,
       };
     default:
-      console.log('default');
       return null;
   }
 }

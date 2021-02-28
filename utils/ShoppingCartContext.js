@@ -11,34 +11,24 @@ export const ACTIONS = {
 export const ShoppingCartContext = React.createContext();
 
 function reducer(shoppingCart, action) {
-  console.log('in reducer');
   switch (action.type) {
     case ACTIONS.DELETE_FROM_CART:
-      console.log('in DELETE');
       cookies.updateCartTotalQuantity();
       const tempShoppingCart = action.payload.shoppingCart.filter((element) => {
         return !(element.productId === Number(action.payload.deletedItemId));
       });
-      console.log('temp Shopping cart after deletion: ', tempShoppingCart);
       cookies.setCookiesClientSide(
         'shoppingCart',
         JSON.stringify(tempShoppingCart),
       );
-      console.log(
-        'after setting cookies: ',
-        JSON.parse(cookies.getCookiesClientSide('shoppingCart')),
-      );
-      console.log('temp shopping cart: ', tempShoppingCart);
       const newState = tempShoppingCart.map((cookieProduct) =>
         action.payload.currentState.find((realProduct) => {
           return realProduct.productId === cookieProduct.productId;
         }),
       );
-      console.log('tempShopingCart: ', newState);
       return newState;
 
     case ACTIONS.GET_CART:
-      console.log('in GET_CART');
       const updatedCart = [];
       if (action.payload.shoppingCart) {
         for (let i = 0; i < action.payload.shoppingCart.length; i++) {
@@ -51,7 +41,6 @@ function reducer(shoppingCart, action) {
           });
         }
       }
-      console.log('Enriched shopping cart: ', updatedCart);
       return updatedCart;
 
     case ACTIONS.ADD_ADDITIONAL_INFO_TO_CART:

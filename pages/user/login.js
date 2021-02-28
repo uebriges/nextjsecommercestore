@@ -11,12 +11,10 @@ export default function Login(props) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { userState, dispatchUserState } = useContext(UserContext);
-  console.log('dispatchUserState', dispatchUserState);
   async function login(event) {
     event.preventDefault();
     if (username === '' || password === '') {
       setError('User name or password missing.');
-      console.log('username or password wrong');
     }
 
     const response = await fetch('/api/users/login', {
@@ -28,13 +26,8 @@ export default function Login(props) {
         password,
       }),
     });
-    console.log('client 1');
 
     const result = await response.json();
-    console.log('result: ', result);
-    console.log(('result.status', result.status));
-    console.log('result body: ', result.body);
-    console.log('client 2');
 
     if (response.status === 401) {
       setError('Username or password incorrect');

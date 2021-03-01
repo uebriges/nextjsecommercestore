@@ -4,7 +4,7 @@ exports.up = async (sql) => {
 	images
 			(image_data)
 	VALUES
-		('/FincaBarcaTimeWaitsForNoOneRed2019.webp')
+		('https://www.weinco.at/assets/Produktbilder/_resampled/ScaleHeightWyIyMDAwIl0/50001830.png')
 	`;
 };
 

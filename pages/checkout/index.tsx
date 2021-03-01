@@ -122,17 +122,49 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
               <form>
                 <fieldset>
                   <legend>Name</legend>
-                  <input type="text" placeholder="First name" />
-                  <input type="text" placeholder="Last name" />
+                  <input
+                    data-cy="checkoutDeliveryFirstName"
+                    type="text"
+                    placeholder="First name"
+                  />
+                  <input
+                    data-cy="checkoutDeliveryLastName"
+                    type="text"
+                    placeholder="Last name"
+                  />
                 </fieldset>
                 <fieldset>
                   <legend>Location</legend>
-                  <input type="text" placeholder="Street Address" />
-                  <input type="text" placeholder="Street Address Line 2" />
-                  <input type="text" placeholder="City" />
-                  <input type="text" placeholder="State / Province" />
-                  <input type="text" placeholder="Postal / ZIP Code" />
-                  <input type="text" placeholder="Country" />
+                  <input
+                    data-cy="checkoutDeliveryStreetAddress"
+                    type="text"
+                    placeholder="Street Address"
+                  />
+                  <input
+                    data-cy="checkoutDeliveryStreetAddress2"
+                    type="text"
+                    placeholder="Street Address Line 2"
+                  />
+                  <input
+                    data-cy="checkoutDeliveryCity"
+                    type="text"
+                    placeholder="City"
+                  />
+                  <input
+                    data-cy="checkoutDeliveryState"
+                    type="text"
+                    placeholder="State / Province"
+                  />
+                  <input
+                    data-cy="checkoutDeliveryZIP"
+                    type="text"
+                    placeholder="Postal / ZIP Code"
+                  />
+                  <input
+                    data-cy="checkoutDeliveryCountry"
+                    type="text"
+                    placeholder="Country"
+                  />
                 </fieldset>
               </form>
             </div>
@@ -157,6 +189,7 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
                   value="No"
                   id="billingInfoEqualsDeliveryInfoNo"
                   onClick={activateBillingInformation}
+                  cy-data="billingAdrEquDeliveryNo"
                 />
               </fieldset>
               <form>
@@ -166,11 +199,13 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
                     type="text"
                     placeholder="First name"
                     readOnly={sameBillingAddress}
+                    data-cy="checkoutBillingFirstName"
                   />
                   <input
                     type="text"
                     placeholder="Last name"
                     readOnly={sameBillingAddress}
+                    data-cy="checkoutBillingLastName"
                   />
                 </fieldset>
                 <fieldset>
@@ -179,31 +214,37 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
                     type="text"
                     placeholder="Street Address"
                     readOnly={sameBillingAddress}
+                    data-cy="checkoutBillingStreetAddress"
                   />
                   <input
                     type="text"
                     placeholder="Street Address Line 2"
                     readOnly={sameBillingAddress}
+                    data-cy="checkoutBillingStreetAddress1"
                   />
                   <input
                     type="text"
                     placeholder="City"
                     readOnly={sameBillingAddress}
+                    data-cy="checkoutBillingCity"
                   />
                   <input
                     type="text"
                     placeholder="State / Province"
                     readOnly={sameBillingAddress}
+                    data-cy="checkoutBillingState"
                   />
                   <input
                     type="text"
                     placeholder="Postal / ZIP Code"
                     readOnly={sameBillingAddress}
+                    data-cy="checkoutBillingZIP"
                   />
                   <input
                     type="text"
                     placeholder="Country"
                     readOnly={sameBillingAddress}
+                    data-cy="checkoutBillingCountry"
                   />
                 </fieldset>
               </form>
@@ -221,6 +262,7 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
                   id="premiumDelivery"
                   onChange={handleDeliveryOption}
                   checked={premiumDelivery}
+                  cy-data="premiumDeliveryRadioBtn"
                 />
                 <br />
                 <label htmlFor="billingInfoEqualsDeliveryInfoNo">
@@ -238,7 +280,9 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
           </div>
         </div>
         <div className="checkoutOverviewAndBuyNow">
-          <button onClick={buyNow}>Buy now</button>
+          <button cy-data="buyNowBtn" onClick={buyNow}>
+            Buy now
+          </button>
           <p>Overview</p>
           <p>Price: {nettoPrice}</p>
           <p>Shipping: {shippingCosts}</p>

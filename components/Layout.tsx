@@ -21,12 +21,14 @@ export interface LoggedInUserType {
 }
 
 interface LayoutProps {
-  loggedInUser: LoggedInUserType;
+  loggedInUser?: LoggedInUserType;
   children: React.ReactNode;
 }
 
 export default function Layout(props: LayoutProps) {
   const { userState } = useContext(UserContext);
+
+  console.log('props.loggedInUser: ', props.loggedInUser !== null);
 
   return (
     <>
@@ -67,12 +69,18 @@ export default function Layout(props: LayoutProps) {
                       />
                     </a>
                   </Link>
-                  <span>{cookies.updateCartTotalQuantity()}</span>
+                  <span data-cy="TotalQuantityInShoppingCart">
+                    {cookies.updateCartTotalQuantity()}
+                  </span>
                 </div>
               ) : null}
               <div className="userProfileLink">
                 <Link
-                  href={props.loggedInUser ? '/user/profile' : '/user/login'}
+                  href={
+                    props.loggedInUser !== null
+                      ? '/user/profile'
+                      : '/user/login'
+                  }
                 >
                   <a>
                     <Image
@@ -84,7 +92,9 @@ export default function Layout(props: LayoutProps) {
                     />
                     {props.loggedInUser ? (
                       <div className="userProfileName">
-                        {props.loggedInUser ? props.loggedInUser.userName : ''}
+                        {props.loggedInUser
+                          ? props.loggedInUser.userName
+                          : null}
                       </div>
                     ) : null}
                   </a>

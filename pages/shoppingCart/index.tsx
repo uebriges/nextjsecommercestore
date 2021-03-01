@@ -118,7 +118,7 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
         <div>
           {state.length !== 0 ? (
             <Link href="/checkout/" key="checkout">
-              <a>Go to checkout</a>
+              <a cy-data="goToCheckoutButton">Go to checkout</a>
             </Link>
           ) : (
             'Your cart is empty'
@@ -153,13 +153,18 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
                     <div css={shoppingCartStyles}>
                       <div>
                         <button
+                          data-cy="decreaseQuantityInShoppingCart"
                           onClick={changeQuantityByClickHandler}
                           id={'-' + productInShoppingCart.productId}
                         >
                           -
                         </button>
-                        <input value={productInShoppingCart.quantity} />
+                        <input
+                          data-cy="quantityInShoppingCart"
+                          value={productInShoppingCart.quantity}
+                        />
                         <button
+                          data-cy="increaseQuantityInShoppingCart"
                           onClick={changeQuantityByClickHandler}
                           id={'+' + productInShoppingCart.productId}
                         >
@@ -172,6 +177,7 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
                           productInShoppingCart.pricePerUnit}
                       </div>
                       <button
+                        data-cy="deleteProductFromShoppingCart"
                         onClick={deleteProductFromShoppingCartHandler}
                         id={String(productInShoppingCart.productId)}
                       >

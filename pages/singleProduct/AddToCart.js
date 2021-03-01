@@ -79,11 +79,18 @@ export default function AddToCart(props) {
           value={quantityOfSingleProduct}
           onChange={changeQuantityByInputHandler}
         />
-        <button onClick={changeQuantityByClickHandler}>+</button>
+        <button
+          data-cy="IncreaseQuantityButton"
+          onClick={changeQuantityByClickHandler}
+        >
+          +
+        </button>
       </div>
       <div>Total: {sumOfSingleProduct.toFixed(2)}</div>
       <div>
-        <button onClick={addSingleProductToCart}>Add to cart</button>
+        <button data-cy="AddToCartButton" onClick={addSingleProductToCart}>
+          Add to cart
+        </button>
       </div>
     </>
   );

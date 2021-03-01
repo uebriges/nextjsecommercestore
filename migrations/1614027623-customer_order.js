@@ -7,6 +7,7 @@ exports.up = async (sql) => {
 		payment_preference_id int,
 		order_date date,
 		sum decimal(12,2),
+		PRIMARY KEY(customer_order_id),
 		CONSTRAINT fk_customer_id
 			FOREIGN KEY(customer_id)
 				REFERENCES customers,

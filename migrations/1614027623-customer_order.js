@@ -1,7 +1,7 @@
 exports.up = async (sql) => {
   await sql`
 	CREATE TABLE customer_orders (
-		customer_id int,
+		customer_id int GENERATED ALWAYS AS IDENTITY,
 		delivery_option_id int,
 		payment_preference_id int,
 		order_date date,
@@ -19,5 +19,5 @@ exports.up = async (sql) => {
 };
 
 exports.down = async (sql) => {
-  await sql`DROP TABLE customer_order;`;
+  await sql`DROP TABLE customer_orders;`;
 };

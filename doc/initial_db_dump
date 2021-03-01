@@ -1,0 +1,519 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.5
+-- Dumped by pg_dump version 12.5
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: customer_order_products; Type: TABLE; Schema: public; Owner: vino
+--
+
+CREATE TABLE public.customer_order_products (
+    customer_order_id integer,
+    product_id integer,
+    quantity integer
+);
+
+
+ALTER TABLE public.customer_order_products OWNER TO vino;
+
+--
+-- Name: customer_orders; Type: TABLE; Schema: public; Owner: vino
+--
+
+CREATE TABLE public.customer_orders (
+    customer_id integer,
+    delivery_option_id integer,
+    payment_preference_id integer,
+    order_date date,
+    sum numeric(12,2),
+    customer_order_id integer NOT NULL
+);
+
+
+ALTER TABLE public.customer_orders OWNER TO vino;
+
+--
+-- Name: customer_orders_customer_order_id_seq; Type: SEQUENCE; Schema: public; Owner: vino
+--
+
+ALTER TABLE public.customer_orders ALTER COLUMN customer_order_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.customer_orders_customer_order_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: customers; Type: TABLE; Schema: public; Owner: vino
+--
+
+CREATE TABLE public.customers (
+    customer_id integer NOT NULL,
+    first_name character varying(40),
+    last_name character varying(40),
+    email text,
+    address_street character varying(50),
+    address_street_nr character varying(10),
+    address_county character varying(50),
+    address_city character varying(50),
+    address_zip character varying(10),
+    address_country character varying(50),
+    admin boolean,
+    user_name character varying(40),
+    delivery_option integer,
+    payment_preference integer
+);
+
+
+ALTER TABLE public.customers OWNER TO vino;
+
+--
+-- Name: customers_customer_id_seq; Type: SEQUENCE; Schema: public; Owner: vino
+--
+
+ALTER TABLE public.customers ALTER COLUMN customer_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.customers_customer_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: delivery_options; Type: TABLE; Schema: public; Owner: vino
+--
+
+CREATE TABLE public.delivery_options (
+    delivery_options_id integer NOT NULL,
+    delivery_options_name character varying(30)
+);
+
+
+ALTER TABLE public.delivery_options OWNER TO vino;
+
+--
+-- Name: delivery_options_delivery_options_id_seq; Type: SEQUENCE; Schema: public; Owner: vino
+--
+
+ALTER TABLE public.delivery_options ALTER COLUMN delivery_options_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.delivery_options_delivery_options_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: images; Type: TABLE; Schema: public; Owner: vino
+--
+
+CREATE TABLE public.images (
+    image_id integer NOT NULL,
+    image_data text
+);
+
+
+ALTER TABLE public.images OWNER TO vino;
+
+--
+-- Name: payment_preferences; Type: TABLE; Schema: public; Owner: vino
+--
+
+CREATE TABLE public.payment_preferences (
+    payment_preferences_id integer NOT NULL,
+    payment_preferences_name character varying(30)
+);
+
+
+ALTER TABLE public.payment_preferences OWNER TO vino;
+
+--
+-- Name: payment_preferences_payment_preferences_id_seq; Type: SEQUENCE; Schema: public; Owner: vino
+--
+
+ALTER TABLE public.payment_preferences ALTER COLUMN payment_preferences_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.payment_preferences_payment_preferences_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: product_image_image_id_seq; Type: SEQUENCE; Schema: public; Owner: vino
+--
+
+ALTER TABLE public.images ALTER COLUMN image_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.product_image_image_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: products; Type: TABLE; Schema: public; Owner: vino
+--
+
+CREATE TABLE public.products (
+    product_id integer NOT NULL,
+    product_name character varying(50),
+    production_year numeric(4,0),
+    price_per_unit numeric(12,2),
+    product_description text,
+    producer character varying(40),
+    inventory integer,
+    deleted boolean
+);
+
+
+ALTER TABLE public.products OWNER TO vino;
+
+--
+-- Name: products_images; Type: TABLE; Schema: public; Owner: vino
+--
+
+CREATE TABLE public.products_images (
+    image_id integer,
+    product_id integer
+);
+
+
+ALTER TABLE public.products_images OWNER TO vino;
+
+--
+-- Name: products_product_id_seq; Type: SEQUENCE; Schema: public; Owner: vino
+--
+
+ALTER TABLE public.products ALTER COLUMN product_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.products_product_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: shopping_cart; Type: TABLE; Schema: public; Owner: vino
+--
+
+CREATE TABLE public.shopping_cart (
+    customer_id integer NOT NULL,
+    product_id integer,
+    quantity integer
+);
+
+
+ALTER TABLE public.shopping_cart OWNER TO vino;
+
+--
+-- Data for Name: customer_order_products; Type: TABLE DATA; Schema: public; Owner: vino
+--
+
+COPY public.customer_order_products (customer_order_id, product_id, quantity) FROM stdin;
+\.
+
+
+--
+-- Data for Name: customer_orders; Type: TABLE DATA; Schema: public; Owner: vino
+--
+
+COPY public.customer_orders (customer_id, delivery_option_id, payment_preference_id, order_date, sum, customer_order_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: customers; Type: TABLE DATA; Schema: public; Owner: vino
+--
+
+COPY public.customers (customer_id, first_name, last_name, email, address_street, address_street_nr, address_county, address_city, address_zip, address_country, admin, user_name, delivery_option, payment_preference) FROM stdin;
+1	John	Doe	john@doe.com	Greatstreet	12	Lewis	New York	39403	United States	f	johndoe	1	1
+2	shop	administrator	administrator@shop.com	Lowstreet	30	Lewis	New York	49304	United States	t	admin	2	2
+\.
+
+
+--
+-- Data for Name: delivery_options; Type: TABLE DATA; Schema: public; Owner: vino
+--
+
+COPY public.delivery_options (delivery_options_id, delivery_options_name) FROM stdin;
+1	Standard
+2	Premium
+\.
+
+
+--
+-- Data for Name: images; Type: TABLE DATA; Schema: public; Owner: vino
+--
+
+COPY public.images (image_id, image_data) FROM stdin;
+2	../images/FincaBarcaTimeWaitsForNoOneRed2019.webp
+\.
+
+
+--
+-- Data for Name: payment_preferences; Type: TABLE DATA; Schema: public; Owner: vino
+--
+
+COPY public.payment_preferences (payment_preferences_id, payment_preferences_name) FROM stdin;
+1	Credit Card
+2	Bill
+\.
+
+
+--
+-- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: vino
+--
+
+COPY public.products (product_id, product_name, production_year, price_per_unit, product_description, producer, inventory, deleted) FROM stdin;
+1	Time Waits For No One Red Skull 2019	2019	16.95	Dieser Monastrell ist ein echter Power-Wein.	Finca Bacara	25	f
+2	Tosca Chianti Riserva DOCG 2016	2016	15.95	Aromen von Kirschen und wilden Himbeeren sowie feiner Veilchenduft entsteigen dieser Chianti Riserva aus dem exzellenten Jahrgang 2016.	Castellani	20	f
+3	Garnacha Cimal 2018	2018	12.95	Von ueber 35 Jahre alten Garnacha-Reben mit geringen Ertraegen stammt der intensive Cimal, der mit reifer Brombeerfruchts sowie Kaffee- und Schokoladenoten verfuehrt	Familia Bastida	13	f
+4	Anciano Reserva Tinto Lisboa 2018	2018	11.95	Die warme Sonne der iberischen Halbinsel und der 	Quinta do Conde	7	f
+5	Tiefschwarz 2019	2019	19.95	Von ueber 35 Jahre alten Garnacha-Reben mit geringen Ertraegen stammt der intensive Cimal, der mit reifer Brombeerfruchts sowie Kaffee- und Schokoladenoten verfuehrt	Schwarz	29	f
+6	Anciano Reserva Tinto Lisboa 2018	2018	11.95	Die warme Sonne der iberischen Halbinsel und der 	Quinta do Conde	7	f
+7	Pinot Grigio Ziobaffa Sizilien IGT 2020	2020	14.95	Die sizilianische Sonne verleiht ihm mehr Kraft und dichtere Frucht als seinen n”rdlichen Verwandten.	Castellani	2	f
+8	Gruener Veltliner Kirchberg 2020	2020	14.95	Dieser Gruene Veltliner des Wagramer Winzers ueberzeugt mit spannenden zart-rauchigen Kraeuternoten, die von fruchtiger Mango und ausgleichendem tabakigen Anklang untermalt werden. Die zarte Sueáe mit dezentem Saeurebogen schmeckt wunderbar mineralisch.	Fritsch	19	f
+9	Gruener Veltliner Kirchberg 2019	2019	11.95	Dieser Gruene Veltliner des Wagramer Winzers ueberzeugt mit spannenden zart-rauchigen Kraeuternoten, die von fruchtiger Mango und ausgleichendem tabakigen Anklang untermalt werden. Die zarte Sueáe mit dezentem Saeurebogen schmeckt wunderbar mineralisch.	Fritsch	19	f
+10	Riesling Gumpoldskirchen 2018	2018	9.95	Leuchtendes Strohgelb, fruchtige Nase nach aepfeln und Nektarinen, am Gaumen wunderbar leichtfueáig, gelber Fruchtmix mit eleganten Zitrusnoten, seidige Textur, filigrane Extraktsueáe mit agiler Saeure, trinkfreudig mit vitaler Spannung und frischem Abgang - ein saftiger Sommerwein, der auch an dunklen Wintertagen die Sonne aufgehen laesst.	Loimer	7	f
+\.
+
+
+--
+-- Data for Name: products_images; Type: TABLE DATA; Schema: public; Owner: vino
+--
+
+COPY public.products_images (image_id, product_id) FROM stdin;
+2	1
+2	2
+2	3
+2	4
+2	5
+2	6
+2	7
+2	8
+2	9
+2	10
+\.
+
+
+--
+-- Data for Name: shopping_cart; Type: TABLE DATA; Schema: public; Owner: vino
+--
+
+COPY public.shopping_cart (customer_id, product_id, quantity) FROM stdin;
+\.
+
+
+--
+-- Name: customer_orders_customer_order_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vino
+--
+
+SELECT pg_catalog.setval('public.customer_orders_customer_order_id_seq', 1, false);
+
+
+--
+-- Name: customers_customer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vino
+--
+
+SELECT pg_catalog.setval('public.customers_customer_id_seq', 2, true);
+
+
+--
+-- Name: delivery_options_delivery_options_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vino
+--
+
+SELECT pg_catalog.setval('public.delivery_options_delivery_options_id_seq', 2, true);
+
+
+--
+-- Name: payment_preferences_payment_preferences_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vino
+--
+
+SELECT pg_catalog.setval('public.payment_preferences_payment_preferences_id_seq', 2, true);
+
+
+--
+-- Name: product_image_image_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vino
+--
+
+SELECT pg_catalog.setval('public.product_image_image_id_seq', 2, true);
+
+
+--
+-- Name: products_product_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vino
+--
+
+SELECT pg_catalog.setval('public.products_product_id_seq', 10, true);
+
+
+--
+-- Name: customer_orders customer_order_id_pk; Type: CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.customer_orders
+    ADD CONSTRAINT customer_order_id_pk PRIMARY KEY (customer_order_id);
+
+
+--
+-- Name: customers customers_pkey; Type: CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.customers
+    ADD CONSTRAINT customers_pkey PRIMARY KEY (customer_id);
+
+
+--
+-- Name: delivery_options delivery_options_pkey; Type: CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.delivery_options
+    ADD CONSTRAINT delivery_options_pkey PRIMARY KEY (delivery_options_id);
+
+
+--
+-- Name: payment_preferences payment_preferences_pkey; Type: CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.payment_preferences
+    ADD CONSTRAINT payment_preferences_pkey PRIMARY KEY (payment_preferences_id);
+
+
+--
+-- Name: images product_image_pkey; Type: CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.images
+    ADD CONSTRAINT product_image_pkey PRIMARY KEY (image_id);
+
+
+--
+-- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (product_id);
+
+
+--
+-- Name: shopping_cart shopping_cart_pkey; Type: CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.shopping_cart
+    ADD CONSTRAINT shopping_cart_pkey PRIMARY KEY (customer_id);
+
+
+--
+-- Name: shopping_cart fk_customer_id; Type: FK CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.shopping_cart
+    ADD CONSTRAINT fk_customer_id FOREIGN KEY (customer_id) REFERENCES public.customers(customer_id);
+
+
+--
+-- Name: customer_orders fk_customer_id; Type: FK CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.customer_orders
+    ADD CONSTRAINT fk_customer_id FOREIGN KEY (customer_id) REFERENCES public.customers(customer_id);
+
+
+--
+-- Name: customer_order_products fk_customer_order_id; Type: FK CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.customer_order_products
+    ADD CONSTRAINT fk_customer_order_id FOREIGN KEY (customer_order_id) REFERENCES public.customer_orders(customer_order_id);
+
+
+--
+-- Name: customers fk_delivery_option_id; Type: FK CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.customers
+    ADD CONSTRAINT fk_delivery_option_id FOREIGN KEY (delivery_option) REFERENCES public.delivery_options(delivery_options_id);
+
+
+--
+-- Name: customer_orders fk_delivery_option_id; Type: FK CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.customer_orders
+    ADD CONSTRAINT fk_delivery_option_id FOREIGN KEY (delivery_option_id) REFERENCES public.delivery_options(delivery_options_id);
+
+
+--
+-- Name: products_images fk_image_id; Type: FK CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.products_images
+    ADD CONSTRAINT fk_image_id FOREIGN KEY (image_id) REFERENCES public.images(image_id);
+
+
+--
+-- Name: customer_orders fk_payment_preference_id; Type: FK CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.customer_orders
+    ADD CONSTRAINT fk_payment_preference_id FOREIGN KEY (payment_preference_id) REFERENCES public.payment_preferences(payment_preferences_id);
+
+
+--
+-- Name: customers fk_payment_preferences_id; Type: FK CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.customers
+    ADD CONSTRAINT fk_payment_preferences_id FOREIGN KEY (payment_preference) REFERENCES public.payment_preferences(payment_preferences_id);
+
+
+--
+-- Name: shopping_cart fk_product_id; Type: FK CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.shopping_cart
+    ADD CONSTRAINT fk_product_id FOREIGN KEY (product_id) REFERENCES public.products(product_id);
+
+
+--
+-- Name: customer_order_products fk_product_id; Type: FK CONSTRAINT; Schema: public; Owner: vino
+--
+
+ALTER TABLE ONLY public.customer_order_products
+    ADD CONSTRAINT fk_product_id FOREIGN KEY (product_id) REFERENCES public.products(product_id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

@@ -1,7 +1,8 @@
 exports.up = async (sql) => {
   await sql`
 	CREATE TABLE customer_orders (
-		customer_id int GENERATED ALWAYS AS IDENTITY,
+		customer_order_id int GENERATED ALWAYS AS IDENTITY,
+		customer_id int,
 		delivery_option_id int,
 		payment_preference_id int,
 		order_date date,

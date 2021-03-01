@@ -6,7 +6,7 @@ context('shoppingCart', () => {
 
 describe('Checkout process including Thank you page: ', () => {
   it('Go to checkout and fill out delivery information', () => {
-    cy.visit('http://localhost:3000/shoppingCart');
+    cy.visit('/shoppingCart');
     cy.get('[cy-data="goToCheckoutButton"]').click();
     cy.get('[data-cy="checkoutDeliveryFirstName"]').type('John');
     cy.get('[data-cy="checkoutDeliveryLastName"]').type('Doe');

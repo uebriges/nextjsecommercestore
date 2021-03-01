@@ -1,7 +1,7 @@
 export function e2eAddToCartTest() {
   describe('Add to cart', function () {
     it('Add one additional quantity to the shopping cart', () => {
-      cy.visit('http://localhost:3000/singleProduct/1');
+      cy.visit('/singleProduct/1');
       const startingCartQuantityValue = Number(
         cy
           .get('[data-cy="TotalQuantityInShoppingCart"]')

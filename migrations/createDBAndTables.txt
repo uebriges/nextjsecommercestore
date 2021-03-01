@@ -1,6 +1,6 @@
 // Create DB
 CREATE DATABASE vino;
-CREATE USER vino WITH ENCRYPTED PASSWORD 'vino'; 
+CREATE USER vino WITH ENCRYPTED PASSWORD 'vino';
 GRANT ALL PRIVILEGES ON DATABASE vino TO vino;
 
 // --- Creating tables ---
@@ -17,7 +17,7 @@ delivery_options_id int GENERATED ALWAYS AS IDENTITY,
 delivery_options_name varchar(30),
 PRIMARY KEY(delivery_options_id));
 
-// Create customer table 
+// Create customer table
 CREATE TABLE customers (
 customer_id int GENERATED ALWAYS AS IDENTITY,
 first_name varchar(40),
@@ -72,7 +72,7 @@ CREATE TABLE images (
 image_id int GENERATED ALWAYS AS IDENTITY,
 image_data bytea,
 PRIMARY KEY(image_id));
- 
+
 // CREATE products_images table
 CREATE TABLE products_images (
 image_id int,
@@ -83,7 +83,7 @@ CONSTRAINT fk_image_id
 );
 
 // CREATE customer_order table
-CREATE TABLE customer_order (
+CREATE TABLE customer_orders (
 customer_id int,
 delivery_option_id int,
 payment_preference_id int,
@@ -112,7 +112,3 @@ CONSTRAINT fk_product_id
 	FOREIGN KEY(product_id)
 		REFERENCES products
 );
-
-
-
-

@@ -1,3 +1,4 @@
+const { useContext } = require('react');
 const cookies = require('../cookies');
 
 test('Updating amount in item of cookie ', () => {
@@ -21,4 +22,12 @@ test('Updating amount in item of cookie ', () => {
 test('Add and remove entries in cookie ', () => {
   // Can't use hook here to remove item from the cart.
   // Test doesn't make sense
+  // dispatch({
+  //   type: ACTIONS.DELETE_FROM_CART,
+  //   payload: {
+  //     shoppingCart: shoppingCart,
+  //     deletedItemId: (event.target as HTMLButtonElement).id,
+  //     currentState: state,
+  //   },
+  // });
 });

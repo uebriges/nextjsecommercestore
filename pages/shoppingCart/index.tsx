@@ -119,7 +119,7 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
         <div>
           {state.length !== 0 ? (
             <Link href="/checkout/" key="checkout">
-              <a cy-data="goToCheckoutButton">Go to checkout</a>
+              <a data-cy="goToCheckoutButton">Go to checkout</a>
             </Link>
           ) : (
             'Your cart is empty'

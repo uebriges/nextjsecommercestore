@@ -1,17 +1,18 @@
 /** @jsxImportSource @emotion/react */
-import { NextPageContext } from 'next';
-import { Router } from 'next/router';
+import { GetServerSidePropsContext } from 'next';
+import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
-import Layout from '../../components/Layout';
+import Layout, { LoggedInUserType } from '../../components/Layout';
 import { checkoutStyles } from '../../styles/styles';
+import { ACTIONS } from '../../utils/cartContextHelper';
 import * as cookies from '../../utils/cookies';
-import { ACTIONS, ShoppingCartContext } from '../../utils/ShoppingCartContext';
+import { ShoppingCartContext } from '../../utils/ShoppingCartContext';
 import { UserContext } from '../../utils/UserContext';
 
 export type CheckoutShoppingCartPropsType = {
   additionalInfo: object;
   shoppingCart: object;
-  loggedInUser: object;
+  loggedInUser: LoggedInUserType;
 };
 
 type ShoppingCartStateType = {
@@ -49,6 +50,7 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
       : props.shoppingCart,
   );
   const { userState } = useContext(UserContext);
+  const router = useRouter();
 
   // Toggle billing information changeability
 
@@ -72,7 +74,7 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
     // Update shopping cart state
 
     dispatch({
-      type: ACTIONS.GET_CART,
+      type: ACTIONS.ADD_ADDITIONAL_INFO_TO_CART,
       payload: {
         shoppingCart: shoppingCart,
         additionalInfo: props.additionalInfo,
@@ -98,12 +100,12 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
       type: ACTIONS.EMPTY_CART,
     });
 
-    Router.push('/thankyou/' + orderId);
+    router.push('/thankyou/' + orderId);
   }
 
   useEffect(() => {
     dispatch({
-      type: ACTIONS.GET_CART,
+      type: ACTIONS.ADD_ADDITIONAL_INFO_TO_CART,
       payload: {
         shoppingCart: shoppingCart,
         additionalInfo: props.additionalInfo,
@@ -294,7 +296,7 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
   );
 }
 
-export async function getServerSideProps(context: NextPageContext) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const database = require('../../utils/database');
   let additionalInfo;
   let shoppingCart;

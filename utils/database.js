@@ -6,7 +6,7 @@ import setPostgresDefaultsOnHeroku from './setPostgresDefaultsOnHeroku';
 setPostgresDefaultsOnHeroku();
 
 const test = require('dotenv-safe').config();
-// let sql = postgres();
+let sql;
 
 if (process.env.NODE_ENV === 'production') {
   // Heroku needs SSL connections but

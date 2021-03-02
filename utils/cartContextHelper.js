@@ -1,5 +1,6 @@
 import cookies from './cookies';
 
+// eslint-disable-next-line
 export const ACTIONS = {
   DELETE_FROM_CART: 'delete-from-cart',
   UPDATE_CART: 'get-cart',

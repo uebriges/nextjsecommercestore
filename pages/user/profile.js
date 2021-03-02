@@ -36,6 +36,7 @@ export default function Profile(props) {
         <>
           <div>Profile of </div>
           <button onClick={logout}>Logout</button>
+          <p>{errorMessage}</p>
         </>
       ) : null}
     </Layout>

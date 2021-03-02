@@ -6,7 +6,7 @@ import Layout, { LoggedInUserType } from '../../components/Layout';
 import { shoppingCartStyles } from '../../styles/styles';
 import { ACTIONS } from '../../utils/cartContextHelper';
 import * as cookies from '../../utils/cookies';
-import { ShoppingCartContext } from '../../utils/ShoppingCartContext';
+import { shoppingCartContext } from '../../utils/ShoppingCartContext';
 import { CheckoutShoppingCartPropsType } from '../checkout/index';
 
 type ProductInShoppingCartType = {
@@ -38,8 +38,8 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
       ? JSON.parse(cookies.getCookiesClientSide('shoppingCart'))
       : props.shoppingCart,
   );
-  const [totalQuantity, setTotalQuantity] = useState();
-  const { state, dispatch } = useContext(ShoppingCartContext);
+  // const [totalQuantity, setTotalQuantity] = useState();
+  const { state, dispatch } = useContext(shoppingCartContext);
   // Update single product in cart after changing quantity
 
   function updateSingleProductInCart(productId: number, newQuantity: number) {
@@ -51,7 +51,7 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
         productId: Number(productId),
       },
     });
-    setTotalQuantity(cookies.updateCartTotalQuantity());
+    cookies.updateCartTotalQuantity();
     dispatch({
       type: ACTIONS.ADD_ADDITIONAL_INFO_TO_CART,
       payload: {
@@ -110,7 +110,7 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
         additionalInfo: props.additionalInfo,
       },
     });
-    setTotalQuantity(cookies.updateCartTotalQuantity());
+    cookies.updateCartTotalQuantity();
   }, [dispatch, props.additionalInfo, shoppingCart]);
 
   return (

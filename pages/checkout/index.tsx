@@ -6,7 +6,7 @@ import Layout, { LoggedInUserType } from '../../components/Layout';
 import { checkoutStyles } from '../../styles/styles';
 import { ACTIONS } from '../../utils/cartContextHelper';
 import * as cookies from '../../utils/cookies';
-import { ShoppingCartContext } from '../../utils/ShoppingCartContext';
+import { shoppingCartContext } from '../../utils/ShoppingCartContext';
 import { UserContext } from '../../utils/UserContext';
 
 export type CheckoutShoppingCartPropsType = {
@@ -22,7 +22,7 @@ type ShoppingCartStateType = {
 
 export default function Checkout(props: CheckoutShoppingCartPropsType) {
   // states and contexts
-  const { dispatch, state } = useContext(ShoppingCartContext);
+  const { dispatch, state } = useContext(shoppingCartContext);
   const [sameBillingAddress, setSameBillingAddress] = useState(true);
   const [premiumDelivery, setPremiumDelivery] = useState(true);
   const [nettoPrice] = useState(
@@ -311,13 +311,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     loggedInUser = null;
   }
 
-  if (context.req) {
-    if (context.req.cookies.shoppingCart) {
-      additionalInfo = await database.getAdditionalInfoForCartItemsCookie(
-        JSON.parse(context.req.cookies.shoppingCart),
-      );
-      shoppingCart = JSON.parse(context.req.cookies.shoppingCart);
-    }
+  if (context.req.cookies.shoppingCart) {
+    additionalInfo = await database.getAdditionalInfoForCartItemsCookie(
+      JSON.parse(context.req.cookies.shoppingCart),
+    );
+    shoppingCart = JSON.parse(context.req.cookies.shoppingCart);
   }
 
   return {

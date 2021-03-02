@@ -1,4 +1,4 @@
-const { useContext } = require('react');
+// eslint-disable-next-line
 const { deleteItemFromCart, ACTIONS } = require('../cartContextHelper');
 const cookies = require('../cookies');
 
@@ -12,7 +12,7 @@ test('Updating amount in item of cookie + cart sum function ', () => {
   ];
   cookies.setCookiesClientSide('shoppingCart', JSON.stringify(testProductSet));
   expect(cookies.updateCartTotalQuantity()).toBe(11);
-  let shoppingCartCookie = JSON.parse(
+  const shoppingCartCookie = JSON.parse(
     cookies.getCookiesClientSide('shoppingCart'),
   );
   shoppingCartCookie[0].quantity = 9;
@@ -30,7 +30,7 @@ test('Add and remove entries in cookies', () => {
   ];
   cookies.setCookiesClientSide('shoppingCart', testProductSet);
   expect(cookies.updateCartTotalQuantity()).toBe(11);
-  let shoppingCartCookie = JSON.parse(
+  const shoppingCartCookie = JSON.parse(
     cookies.getCookiesClientSide('shoppingCart'),
   );
   const action = {

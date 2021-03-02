@@ -7,7 +7,7 @@ import {
 } from './cartContextHelper';
 import cookies from './cookies';
 
-export const ShoppingCartContext = React.createContext();
+export const shoppingCartContext = React.createContext();
 
 function reducer(shoppingCart, action) {
   switch (action.type) {
@@ -33,8 +33,8 @@ export function ShoppingCartContextProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, []);
 
   return (
-    <ShoppingCartContext.Provider value={{ state, dispatch }}>
+    <shoppingCartContext.Provider value={{ state, dispatch }}>
       {children}
-    </ShoppingCartContext.Provider>
+    </shoppingCartContext.Provider>
   );
 }

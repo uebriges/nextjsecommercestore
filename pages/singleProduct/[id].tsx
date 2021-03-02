@@ -1,11 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { GetServerSidePropsContext } from 'next';
 import Image from 'next/image';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Layout, { LoggedInUserType } from '../../components/Layout';
 import { productPageStyles } from '../../styles/styles';
 import * as cookies from '../../utils/cookies';
-import { UserContext } from '../../utils/UserContext';
 import Error404 from '../404';
 import AddToCart from './AddToCart';
 
@@ -27,7 +26,6 @@ type SingleProductType = {
 
 export default function SingleProduct(props: SingleProductType) {
   const [totalQuantity, setTotalQuantity] = useState();
-  const { userState } = useContext(UserContext);
   const [productDescription, setProductDescription] = useState(
     props.product.productDescription,
   );
@@ -46,7 +44,7 @@ export default function SingleProduct(props: SingleProductType) {
         pricePerUnit,
       }),
     });
-    const result = await response.json();
+    // await response.json();
     response.status === 200
       ? setUpdateProductMessage('Product updated')
       : setUpdateProductMessage(
@@ -58,7 +56,7 @@ export default function SingleProduct(props: SingleProductType) {
     setTotalQuantity(cookies.updateCartTotalQuantity());
   }, []);
 
-  if (!props.product) {
+  if (!props.hasOwnProperty('product')) {
     return <Error404 />;
   }
 
@@ -95,7 +93,7 @@ export default function SingleProduct(props: SingleProductType) {
           })}
         </div>
         <div className="singleProductDescription">
-          {props.loggedInUser && props.loggedInUser.isAdmin ? (
+          {props.loggedInUser !== null && props.loggedInUser.isAdmin ? (
             <textarea
               defaultValue={props.product.productDescription}
               onChange={(event) => setProductDescription(event.target.value)}
@@ -132,6 +130,7 @@ export default function SingleProduct(props: SingleProductType) {
             <AddToCart
               product={props.product}
               setTotalQuantity={setTotalQuantity}
+              totalQantity={totalQuantity}
             />
           )}
         </div>

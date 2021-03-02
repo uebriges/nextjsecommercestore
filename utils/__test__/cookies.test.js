@@ -10,7 +10,7 @@ test('Updating amount in item of cookie + cart sum function ', () => {
     },
     { id: 2, quantity: 8 },
   ];
-
+  cookies.setCookiesClientSide('shoppingCart', JSON.stringify(testProductSet));
   expect(cookies.updateCartTotalQuantity()).toBe(11);
   let shoppingCartCookie = JSON.parse(
     cookies.getCookiesClientSide('shoppingCart'),
@@ -53,6 +53,5 @@ test('Add and remove entries in cookies', () => {
   };
 
   const newCart = deleteItemFromCart(ACTIONS.DELETE_FROM_CART, action);
-  console.log('newCart.length: ', newCart.length);
   expect(newCart.length).toBe(1);
 });

@@ -1,3 +1,9 @@
+const {
+  default: setPostgresDefaultsOnHeroku,
+} = require('./utils/setPostgresDefaultsOnHeroku');
+
+setPostgresDefaultsOnHeroku();
+
 const options = {};
 
 if (process.env.NODE_ENV === 'production') {

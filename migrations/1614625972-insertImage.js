@@ -4,7 +4,7 @@ exports.up = async (sql) => {
 	images
 			(image_data)
 	VALUES
-		('asdklf');
+		('/FincaBarcaTimeWaitsForNoOneRed2019.webp');
 	`;
 };
 

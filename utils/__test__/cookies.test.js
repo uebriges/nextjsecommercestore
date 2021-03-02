@@ -1,7 +1,8 @@
 const { useContext } = require('react');
+const { deleteItemFromCart, ACTIONS } = require('../cartContextHelper');
 const cookies = require('../cookies');
 
-test('Updating amount in item of cookie ', () => {
+test('Updating amount in item of cookie + cart sum function ', () => {
   const testProductSet = [
     {
       id: 1,
@@ -9,7 +10,7 @@ test('Updating amount in item of cookie ', () => {
     },
     { id: 2, quantity: 8 },
   ];
-  console.log(cookies.setCookiesClientSide('shoppingCart', testProductSet));
+
   expect(cookies.updateCartTotalQuantity()).toBe(11);
   let shoppingCartCookie = JSON.parse(
     cookies.getCookiesClientSide('shoppingCart'),
@@ -19,15 +20,39 @@ test('Updating amount in item of cookie ', () => {
   expect(cookies.updateCartTotalQuantity()).toBe(17);
 });
 
-test('Add and remove entries in cookie ', () => {
-  // Can't use hook here to remove item from the cart.
-  // Test doesn't make sense
-  // dispatch({
-  //   type: ACTIONS.DELETE_FROM_CART,
-  //   payload: {
-  //     shoppingCart: shoppingCart,
-  //     deletedItemId: (event.target as HTMLButtonElement).id,
-  //     currentState: state,
-  //   },
-  // });
+test('Add and remove entries in cookies', () => {
+  const testProductSet = [
+    {
+      productId: 1,
+      quantity: 3,
+    },
+    { productId: 2, quantity: 8 },
+  ];
+  cookies.setCookiesClientSide('shoppingCart', testProductSet);
+  expect(cookies.updateCartTotalQuantity()).toBe(11);
+  let shoppingCartCookie = JSON.parse(
+    cookies.getCookiesClientSide('shoppingCart'),
+  );
+  const action = {
+    payload: {
+      shoppingCart: shoppingCartCookie,
+      deletedItemId: 2,
+      currentState: [
+        {
+          productId: 2,
+          productName: 'Product 2',
+          pricePerUnit: 30.2,
+        },
+        {
+          productId: 1,
+          productName: 'Product 1',
+          pricePerUnit: 10.8,
+        },
+      ],
+    },
+  };
+
+  const newCart = deleteItemFromCart(ACTIONS.DELETE_FROM_CART, action);
+  console.log('newCart.length: ', newCart.length);
+  expect(newCart.length).toBe(1);
 });

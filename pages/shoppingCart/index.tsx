@@ -4,8 +4,9 @@ import Link from 'next/link';
 import { useContext, useEffect, useState } from 'react';
 import Layout, { LoggedInUserType } from '../../components/Layout';
 import { shoppingCartStyles } from '../../styles/styles';
+import { ACTIONS } from '../../utils/cartContextHelper';
 import * as cookies from '../../utils/cookies';
-import { ACTIONS, ShoppingCartContext } from '../../utils/ShoppingCartContext';
+import { ShoppingCartContext } from '../../utils/ShoppingCartContext';
 import { CheckoutShoppingCartPropsType } from '../checkout/index';
 
 type ProductInShoppingCartType = {
@@ -43,7 +44,7 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
 
   function updateSingleProductInCart(productId: number, newQuantity: number) {
     dispatch({
-      type: ACTIONS.ADD_ADDITIONAL_INFO_TO_CART,
+      type: ACTIONS.UPDATE_CART,
       payload: {
         shoppingCart: shoppingCart,
         newQuantity: newQuantity,
@@ -52,7 +53,7 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
     });
     setTotalQuantity(cookies.updateCartTotalQuantity());
     dispatch({
-      type: ACTIONS.GET_CART,
+      type: ACTIONS.ADD_ADDITIONAL_INFO_TO_CART,
       payload: {
         shoppingCart: shoppingCart,
         additionalInfo: props.additionalInfo,
@@ -103,7 +104,7 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
 
   useEffect(() => {
     dispatch({
-      type: ACTIONS.GET_CART,
+      type: ACTIONS.ADD_ADDITIONAL_INFO_TO_CART,
       payload: {
         shoppingCart: shoppingCart,
         additionalInfo: props.additionalInfo,
@@ -224,6 +225,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       shoppingCart = JSON.parse(context.req.cookies.shoppingCart);
     }
   }
+
+  console.log('additional info: ', additionalInfo);
+  console.log('shopping cart: ', shoppingCart);
+  console.log('loggedInUser: ', loggedInUser);
 
   return {
     props: {

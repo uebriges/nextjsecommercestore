@@ -2,7 +2,7 @@ exports.up = async (sql) => {
   await sql`
 	CREATE TABLE images (
 		image_id int GENERATED ALWAYS AS IDENTITY,
-		image_data bytea,
+		image_data text,
 		PRIMARY KEY(image_id));`;
 };
 

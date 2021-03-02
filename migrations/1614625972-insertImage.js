@@ -4,13 +4,13 @@ exports.up = async (sql) => {
 	images
 			(image_data)
 	VALUES
-		('https://www.weinco.at/assets/Produktbilder/_resampled/ScaleHeightWyIyMDAwIl0/50001830.png')
+		('asdklf');
 	`;
 };
 
 exports.down = async (sql) => {
   await sql`
 	DELETE FROM
-	images
+	images;
 	`;
 };

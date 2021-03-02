@@ -5,13 +5,13 @@ exports.up = async (sql) => {
 			(payment_preferences_name)
 	VALUES
 		('Credit Card'),
-		('Bill')
+		('Bill');
 	`;
 };
 
 exports.down = async (sql) => {
   await sql`
 	DELETE FROM
-	payment_preferences
+	payment_preferences;
 	`;
 };

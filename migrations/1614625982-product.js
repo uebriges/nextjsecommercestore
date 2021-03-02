@@ -13,13 +13,13 @@ exports.up = async (sql) => {
 		10.20,
 		'Best wine ever',
 		10
-		)
+		);
 	`;
 };
 
 exports.down = async (sql) => {
   await sql`
 	DELETE FROM
-	products
+	products;
 	`;
 };

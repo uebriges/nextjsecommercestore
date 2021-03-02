@@ -5,13 +5,13 @@ exports.up = async (sql) => {
 			(delivery_options_name)
 	VALUES
 		('Standard'),
-		('Premium')
+		('Premium');
 	`;
 };
 
 exports.down = async (sql) => {
   await sql`
 	DELETE FROM
-	delivery_options
+	delivery_options;
 	`;
 };

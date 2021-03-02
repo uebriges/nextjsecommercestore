@@ -9,7 +9,10 @@ const test = require('dotenv-safe').config();
 let sql = postgres();
 
 if (process.env.NODE_ENV === 'production') {
-  sql = postgres({ ssl: true });
+  // Heroku needs SSL connections but
+  // has an "unauthorized" certificate
+  // https://devcenter.heroku.com/changelog-items/852
+  sql = postgres({ ssl: { rejectUnauthorized: false } });
 } else {
   if (!globalThis.__postgresSqlClient) {
     globalThis.__postgresSqlClient = postgres();

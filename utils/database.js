@@ -1,5 +1,9 @@
 import camelCaseKeys from 'camelcase-keys';
 import postgres from 'postgres';
+import setPostgresDefaultsOnHeroku from './setPostgresDefaultsOnHeroku';
+
+// Set env variable for the Heroku db
+setPostgresDefaultsOnHeroku();
 
 const test = require('dotenv-safe').config();
 let sql = postgres();

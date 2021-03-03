@@ -43,28 +43,30 @@ export default function Home(props) {
       <div css={productPageStyles}>
         {products.map((element, index) => {
           return (
-            <div key={'singleProduct' + index}>
-              <Link
-                key={'wineImageLink' + index}
-                href="/singleProduct/[id]"
-                as={'/singleProduct/' + element.productId}
-              >
-                <a>
-                  <Image
-                    key={index}
-                    alt="Bottle of vine"
-                    src={
-                      element.imagesPerProduct
-                        ? element.imagesPerProduct.split(';')[0]
-                        : ''
-                    }
-                    width="50"
-                    height="244"
-                  />
-                </a>
-              </Link>
-              <div key={'productName' + index}>{element.productName}</div>
-              <div key={'productPricePerUnit' + index}>
+            <div key={'singleProduct' + index} className="singleProductImages">
+              <div>
+                <Link
+                  key={'wineImageLink' + index}
+                  href="/singleProduct/[id]"
+                  as={'/singleProduct/' + element.productId}
+                >
+                  <a>
+                    <Image
+                      key={index}
+                      alt="Bottle of vine"
+                      src={
+                        element.imagesPerProduct
+                          ? element.imagesPerProduct.split(';')[0]
+                          : ''
+                      }
+                      width="50"
+                      height="244"
+                    />
+                  </a>
+                </Link>
+                <div key={'productName' + index}>{element.productName}</div>
+              </div>
+              <div key={'productPricePerUnit' + index} className="pricePerUnit">
                 {element.pricePerUnit}
               </div>
               {props.loggedInUser && props.loggedInUser.isAdmin ? (

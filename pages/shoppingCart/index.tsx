@@ -1,4 +1,3 @@
-import { GetServerSidePropsContext } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useContext, useEffect, useState } from 'react';
@@ -119,10 +118,10 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
         <div>
           {state.length !== 0 ? (
             <Link href="/checkout/" key="checkout">
-              <a cy-data="goToCheckoutButton">Go to checkout</a>
+              <a data-cy="goToCheckoutButton">Go to checkout</a>
             </Link>
           ) : (
-            'Your cart is empty'
+            <p>Your cart is empty</p>
           )}
         </div>
         <div>

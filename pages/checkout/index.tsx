@@ -191,7 +191,7 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
                   value="No"
                   id="billingInfoEqualsDeliveryInfoNo"
                   onClick={activateBillingInformation}
-                  cy-data="billingAdrEquDeliveryNo"
+                  data-cy="billingAdrEquDeliveryNo"
                 />
               </fieldset>
               <form>
@@ -264,7 +264,7 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
                   id="premiumDelivery"
                   onChange={handleDeliveryOption}
                   checked={premiumDelivery}
-                  cy-data="premiumDeliveryRadioBtn"
+                  data-cy="premiumDeliveryRadioBtn"
                 />
                 <br />
                 <label htmlFor="billingInfoEqualsDeliveryInfoNo">
@@ -282,7 +282,7 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
           </div>
         </div>
         <div className="checkoutOverviewAndBuyNow">
-          <button cy-data="buyNowBtn" onClick={buyNow}>
+          <button data-cy="buyNowBtn" onClick={buyNow}>
             Buy now
           </button>
           <p>Overview</p>

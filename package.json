@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p $PORT",
+    "heroku-postbuild": "yarn migrate up && yarn build",
+    "start": "next start -p ${PORT:-\"3000\"}",
     "migrate": "dotenv ley"
   },
   "dependencies": {
@@ -18,6 +19,7 @@
     "js-cookie": "^2.2.1",
     "next": "10.0.6",
     "next-cookies": "^2.0.3",
+    "pg-connection-string": "^2.4.0",
     "postgres": "^1.0.2",
     "react": "17.0.1",
     "react-dom": "17.0.1"
@@ -53,5 +55,8 @@
     "testPathIgnorePatterns": [
       "<rootDir>/cypress"
     ]
-  }
+  },
+  "cacheDirectories": [
+    ".next/cache"
+  ]
 }

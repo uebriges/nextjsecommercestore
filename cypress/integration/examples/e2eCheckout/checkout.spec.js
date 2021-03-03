@@ -7,7 +7,7 @@ context('shoppingCart', () => {
 describe('Checkout process including Thank you page: ', () => {
   it('Go to checkout and fill out delivery information', () => {
     cy.visit('/shoppingCart');
-    cy.get('[cy-data="goToCheckoutButton"]').click();
+    cy.get('[data-cy="goToCheckoutButton"]').click();
     cy.get('[data-cy="checkoutDeliveryFirstName"]').type('John');
     cy.get('[data-cy="checkoutDeliveryLastName"]').type('Doe');
     cy.get('[data-cy="checkoutDeliveryStreetAddress"]').type('Example');
@@ -19,7 +19,7 @@ describe('Checkout process including Thank you page: ', () => {
   });
 
   it('Fill out different billing information', () => {
-    cy.get('[cy-data="billingAdrEquDeliveryNo"]').click();
+    cy.get('[data-cy="billingAdrEquDeliveryNo"]').click();
     cy.get('[data-cy="checkoutBillingFirstName"]').type('Johnny');
     cy.get('[data-cy="checkoutBillingLastName"]').type('Does');
     cy.get('[data-cy="checkoutBillingStreetAddress"]').type('Example street');
@@ -31,7 +31,7 @@ describe('Checkout process including Thank you page: ', () => {
   });
 
   it('Chose delivery option premium and finish buying process', () => {
-    cy.get('[cy-data="premiumDeliveryRadioBtn"]').click();
-    cy.get('[cy-data="buyNowBtn"]').click();
+    cy.get('[data-cy="premiumDeliveryRadioBtn"]').click();
+    cy.get('[data-cy="buyNowBtn"]').click();
   });
 });

@@ -6,7 +6,6 @@ import Layout, { LoggedInUserType } from '../../components/Layout';
 import { productPageStyles } from '../../styles/styles';
 import * as cookies from '../../utils/cookies';
 import Error404 from '../404';
-import AddToCart from './AddToCart';
 
 type ProductType = {
   productId: number;
@@ -24,6 +23,11 @@ type SingleProductType = {
   loggedInUser: LoggedInUserType;
 };
 
+type ProductInCookiesType = {
+  productId: number;
+  quantity: number;
+};
+
 export default function SingleProduct(props: SingleProductType) {
   const [totalQuantity, setTotalQuantity] = useState();
   const [productDescription, setProductDescription] = useState(
@@ -31,6 +35,8 @@ export default function SingleProduct(props: SingleProductType) {
   );
   const [pricePerUnit, setPricePerUnit] = useState(props.product.pricePerUnit);
   const [updateProductMessage, setUpdateProductMessage] = useState('');
+  const [quantityOfSingleProduct, setQuantityOfSingleProduct] = useState(0);
+  const [sumOfSingleProduct, setSumOfSingleProduct] = useState(0);
 
   async function saveChanges() {
     const response = await fetch('/api/updateProduct', {
@@ -44,7 +50,6 @@ export default function SingleProduct(props: SingleProductType) {
         pricePerUnit,
       }),
     });
-    // await response.json();
     response.status === 200
       ? setUpdateProductMessage('Product updated')
       : setUpdateProductMessage(
@@ -56,11 +61,82 @@ export default function SingleProduct(props: SingleProductType) {
     setTotalQuantity(cookies.updateCartTotalQuantity());
   }, []);
 
+  useEffect(() => {
+    setSumOfSingleProduct(quantityOfSingleProduct * props.product.pricePerUnit);
+  }, [quantityOfSingleProduct, props.product.pricePerUnit]);
+
   if (!props.hasOwnProperty('product')) {
     return <Error404 />;
   }
 
   const images = props.product.imagesPerProduct.split(';');
+
+  // ----------------- construction area
+
+  function changeQuantityByClickHandler(
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) {
+    if (event.currentTarget.innerHTML === '+') {
+      setQuantityOfSingleProduct(quantityOfSingleProduct + 1);
+    } else {
+      setQuantityOfSingleProduct(
+        quantityOfSingleProduct > 0 ? quantityOfSingleProduct - 1 : 0,
+      );
+    }
+  }
+
+  function changeQuantityByInputHandler(
+    event: React.FormEvent<HTMLInputElement>,
+  ) {
+    setQuantityOfSingleProduct(Number(event.currentTarget.value));
+  }
+
+  function addSingleProductToCart() {
+    // Check if product id already available in cookies
+    // If true -> get value, add quantity, write new quantity into cookie
+    // if false -> write quantity into cookie
+    if (cookies.getCookiesClientSide('shoppingCart')) {
+      const productsInCookiesArray = JSON.parse(
+        cookies.getCookiesClientSide('shoppingCart'),
+      );
+      const product = productsInCookiesArray.find(
+        (element: ProductInCookiesType) =>
+          element.productId === props.product.productId,
+      );
+      if (product) {
+        product.quantity = product.quantity + quantityOfSingleProduct;
+        productsInCookiesArray.map((element: ProductInCookiesType) =>
+          element.productId === product.productId ? product : element,
+        );
+        cookies.setCookiesClientSide(
+          'shoppingCart',
+          JSON.stringify(productsInCookiesArray),
+        );
+        setTotalQuantity(cookies.updateCartTotalQuantity());
+        cookies.updateCartTotalQuantity();
+      } else {
+        productsInCookiesArray.push({
+          productId: props.product.productId,
+          quantity: quantityOfSingleProduct,
+        });
+        cookies.setCookiesClientSide(
+          'shoppingCart',
+          JSON.stringify(productsInCookiesArray),
+        );
+        setTotalQuantity(cookies.updateCartTotalQuantity());
+        cookies.updateCartTotalQuantity();
+      }
+    } else {
+      const shoppingCartEntry = {
+        productId: props.product.productId,
+        quantity: quantityOfSingleProduct,
+      };
+      cookies.setCookiesClientSide('shoppingCart', [shoppingCartEntry]);
+      setTotalQuantity(cookies.updateCartTotalQuantity());
+      cookies.updateCartTotalQuantity();
+    }
+    setQuantityOfSingleProduct(0);
+  }
 
   return (
     <Layout loggedInUser={props.loggedInUser}>
@@ -127,11 +203,33 @@ export default function SingleProduct(props: SingleProductType) {
               <p>{updateProductMessage}</p>
             </>
           ) : (
-            <AddToCart
-              product={props.product}
-              setTotalQuantity={setTotalQuantity}
-              totalQantity={totalQuantity}
-            />
+            // Change quantity of product
+            <>
+              <div>
+                <button onClick={changeQuantityByClickHandler}>-</button>
+                <input
+                  type="text"
+                  min="0"
+                  value={quantityOfSingleProduct}
+                  onChange={changeQuantityByInputHandler}
+                />
+                <button
+                  data-cy="IncreaseQuantityButton"
+                  onClick={changeQuantityByClickHandler}
+                >
+                  +
+                </button>
+              </div>
+              <div>Total: {sumOfSingleProduct.toFixed(2)}</div>
+              <div>
+                <button
+                  data-cy="AddToCartButton"
+                  onClick={addSingleProductToCart}
+                >
+                  Add to cart
+                </button>
+              </div>
+            </>
           )}
         </div>
       </div>

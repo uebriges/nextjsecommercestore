@@ -13,6 +13,60 @@ exports.up = async (sql) => {
 		10.20,
 		'Best wine ever',
 		10
+		),
+		('Time Waits For No One Red Skull 2019',
+		2019,
+		10.20,
+		'Best wine ever',
+		10
+		),
+		('Time Waits For No One Red Skull 2019',
+		2019,
+		10.20,
+		'Best wine ever',
+		10
+		),
+		('Time Waits For No One Red Skull 2019',
+		2019,
+		10.20,
+		'Best wine ever',
+		10
+		),
+		('Time Waits For No One Red Skull 2019',
+		2019,
+		10.20,
+		'Best wine ever',
+		10
+		),
+		('Time Waits For No One Red Skull 2019',
+		2019,
+		10.20,
+		'Best wine ever',
+		10
+		),
+		('Time Waits For No One Red Skull 2019',
+		2019,
+		10.20,
+		'Best wine ever',
+		10
+		),
+		('Time Waits For No One Red Skull 2019',
+		2019,
+		10.20,
+		'Best wine ever',
+		10
+		),
+		('Time Waits For No One Red Skull 2019',
+		2019,
+		10.20,
+		'Best wine ever',
+		10
+		),
+		('Time Waits For No One Red Skull 2019',
+		2019,
+		10.20,
+		'Best wine ever',
+		10
 		);
 	`;
 };

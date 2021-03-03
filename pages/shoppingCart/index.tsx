@@ -1,9 +1,11 @@
-import { GetServerSidePropsContext } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useContext, useEffect, useState } from 'react';
 import Layout, { LoggedInUserType } from '../../components/Layout';
-import { shoppingCartStyles } from '../../styles/styles';
+import {
+  increaseDecreaseButtonStyles,
+  shoppingCartStyles,
+} from '../../styles/styles';
 import { ACTIONS } from '../../utils/cartContextHelper';
 import * as cookies from '../../utils/cookies';
 import { shoppingCartContext } from '../../utils/ShoppingCartContext';
@@ -116,7 +118,7 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
   return (
     <Layout loggedInUser={props.loggedInUser}>
       <div css={shoppingCartStyles}>
-        <div>
+        <div className="checkButton">
           {state.length !== 0 ? (
             <Link href="/checkout/" key="checkout">
               <a data-cy="goToCheckoutButton">Go to checkout</a>
@@ -132,7 +134,7 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
               index: number,
             ) => {
               return (
-                <div key={index}>
+                <div key={index} className="shoppingCartProduct">
                   <div className="cartProductImage">
                     <Link
                       href={'/singleProduct/' + productInShoppingCart.productId}
@@ -150,47 +152,47 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
                   <div key={productInShoppingCart.productName + index}>
                     {productInShoppingCart.productName}
                   </div>
-                  <div>
-                    <div css={shoppingCartStyles}>
-                      <div>
-                        <button
-                          data-cy="decreaseQuantityInShoppingCart"
-                          onClick={changeQuantityByClickHandler}
-                          id={'-' + productInShoppingCart.productId}
-                        >
-                          -
-                        </button>
-                        <input
-                          data-cy="quantityInShoppingCart"
-                          value={productInShoppingCart.quantity}
-                        />
-                        <button
-                          data-cy="increaseQuantityInShoppingCart"
-                          onClick={changeQuantityByClickHandler}
-                          id={'+' + productInShoppingCart.productId}
-                        >
-                          +
-                        </button>
-                      </div>
-                      <div>
-                        Total:
-                        {productInShoppingCart.quantity *
-                          productInShoppingCart.pricePerUnit}
-                      </div>
+                  <div className="quantitySumAndDelete">
+                    <div>
                       <button
-                        data-cy="deleteProductFromShoppingCart"
-                        onClick={deleteProductFromShoppingCartHandler}
-                        id={String(productInShoppingCart.productId)}
+                        css={increaseDecreaseButtonStyles}
+                        data-cy="decreaseQuantityInShoppingCart"
+                        onClick={changeQuantityByClickHandler}
+                        id={'-' + productInShoppingCart.productId}
                       >
-                        Delete
-                        {/* <Image
+                        -
+                      </button>
+                      <input
+                        data-cy="quantityInShoppingCart"
+                        value={productInShoppingCart.quantity}
+                      />
+                      <button
+                        css={increaseDecreaseButtonStyles}
+                        data-cy="increaseQuantityInShoppingCart"
+                        onClick={changeQuantityByClickHandler}
+                        id={'+' + productInShoppingCart.productId}
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div>
+                      Total:
+                      {productInShoppingCart.quantity *
+                        productInShoppingCart.pricePerUnit}
+                    </div>
+                    <button
+                      data-cy="deleteProductFromShoppingCart"
+                      onClick={deleteProductFromShoppingCartHandler}
+                      id={String(productInShoppingCart.productId)}
+                    >
+                      Delete
+                      {/* <Image
           src="/deleteButton.svg"
           height="20"
           width="20"
           onclick={deleteProductFromShoppingCartHandler}
         /> */}
-                      </button>
-                    </div>
+                    </button>
                   </div>
                 </div>
               );

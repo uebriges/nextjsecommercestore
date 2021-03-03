@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useContext, useState } from 'react';
 import Layout from '../components/Layout';
-import { productPageStyles } from '../styles/styles';
+import { productsPageStyles } from '../styles/styles';
 import { UserContext } from '../utils/UserContext';
 
 export default function Home(props) {
@@ -40,7 +40,7 @@ export default function Home(props) {
       <Head>
         <title>Vino</title>
       </Head>
-      <div css={productPageStyles}>
+      <div css={productsPageStyles}>
         {products.map((element, index) => {
           return (
             <div key={'singleProduct' + index} className="singleProductImages">

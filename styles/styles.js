@@ -6,6 +6,16 @@ export const globalStyles = css`
     margin: 0;
   }
 `;
+
+// General styles
+
+// Stlyes for increase/decrease buttons
+export const increaseDecreaseButtonStyles = css`
+  border-radius: 50%;
+  outline: none;
+  margin: 0 5px;
+`;
+
 export const appAreaStyles = css`
   display: flex;
   flex-direction: column;
@@ -80,14 +90,47 @@ export const mainStyles = css`
   box-sizing: border-box;
 `;
 
-export const productPageStyles = css`
+export const productsPageStyles = css`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: flex-start;
 
   div {
     margin: 15px;
   }
+
+  .singleProductImages {
+    display: flex;
+    flex-direction: column;
+    max-width: 80px;
+    margin: 10px;
+    max-width: 200px;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+
+    .addImagesButton {
+      border: none;
+      background: none;
+      height: 40px;
+      width: 40px;
+    }
+  }
+
+  .singleProductDescription {
+    max-width: 500px;
+  }
+
+  .singleProductAddToCart {
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
+export const singleProductPageStyle = css`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 
   .singleProductImages {
     display: flex;
@@ -121,6 +164,7 @@ export const productPageStyles = css`
 `;
 
 export const shoppingCartStyles = css`
+  margin: 20px;
   .deleteCartItemStyles {
     pointer-events: none;
   }
@@ -130,15 +174,40 @@ export const shoppingCartStyles = css`
     text-align: center;
     margin: auto;
   }
+
+  .checkButton {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 50px;
+  }
+
+  .shoppingCartProduct {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0px;
+    border-top: 1px solid;
+    padding-top: 15px;
+  }
+
+  .quantitySumAndDelete {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+
+    div {
+      margin: 15px 0;
+    }
+  }
 `;
 
 export const checkoutStyles = css`
   height: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 
   div {
-    margin: 0 20px;
+    margin: 0;
   }
 
   .checkoutInformation {
@@ -148,13 +217,14 @@ export const checkoutStyles = css`
     .checkoutDeliveryAndBilling {
       display: flex;
       justify-content: space-between;
-      border: 1px solid;
+      display: flex;
+      flex-direction: column;
+      max-width: 500px;
     }
 
     .checkoutDeliveryAndBilling > div {
-      margin: 0 20px;
+      margin: 30px 20px;
       flex-grow: 1;
-      border: 1px solid;
 
       form > input {
         margin: 10px 10px;
@@ -165,8 +235,23 @@ export const checkoutStyles = css`
   .checkoutOverviewAndBuyNow {
     display: flex;
     flex-direction: column;
-    border: 1px solid;
     min-width: 300px;
+  }
+`;
+
+export const loginPageStyles = css`
+  text-align: center;
+
+  input {
+    margin-bottom: 5px;
+  }
+`;
+
+export const registerPageStyles = css`
+  text-align: center;
+
+  input {
+    margin-bottom: 5px;
   }
 `;
 

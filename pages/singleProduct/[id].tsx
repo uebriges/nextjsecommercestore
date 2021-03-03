@@ -3,7 +3,10 @@ import { GetServerSidePropsContext } from 'next';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Layout, { LoggedInUserType } from '../../components/Layout';
-import { productPageStyles } from '../../styles/styles';
+import {
+  increaseDecreaseButtonStyles,
+  singleProductPageStyle,
+} from '../../styles/styles';
 import * as cookies from '../../utils/cookies';
 import Error404 from '../404';
 
@@ -140,7 +143,7 @@ export default function SingleProduct(props: SingleProductType) {
 
   return (
     <Layout loggedInUser={props.loggedInUser}>
-      <div css={productPageStyles}>
+      <div css={singleProductPageStyle}>
         {/* For later: If admin is logged in, button for adding images is shown */}
         <div className="singleProductImages">
           {props.loggedInUser && props.loggedInUser.isAdmin ? (
@@ -158,13 +161,15 @@ export default function SingleProduct(props: SingleProductType) {
 
           {images.map((picture, index) => {
             return (
-              <Image
-                key={index}
-                alt="Bottle of vine"
-                src={picture}
-                width="140"
-                height="488"
-              />
+              <div key={'singeProductImage' + index}>
+                <Image
+                  key={index}
+                  alt="Bottle of vine"
+                  src={picture}
+                  width="140"
+                  height="488"
+                />
+              </div>
             );
           })}
         </div>
@@ -206,7 +211,12 @@ export default function SingleProduct(props: SingleProductType) {
             // Change quantity of product
             <>
               <div>
-                <button onClick={changeQuantityByClickHandler}>-</button>
+                <button
+                  css={increaseDecreaseButtonStyles}
+                  onClick={changeQuantityByClickHandler}
+                >
+                  -
+                </button>
                 <input
                   type="text"
                   min="0"
@@ -214,6 +224,7 @@ export default function SingleProduct(props: SingleProductType) {
                   onChange={changeQuantityByInputHandler}
                 />
                 <button
+                  css={increaseDecreaseButtonStyles}
                   data-cy="IncreaseQuantityButton"
                   onClick={changeQuantityByClickHandler}
                 >

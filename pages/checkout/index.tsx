@@ -286,9 +286,9 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
             Buy now
           </button>
           <p>Overview</p>
-          <p>Price: {nettoPrice}</p>
-          <p>Shipping: {shippingCosts}</p>
-          <p>VAT: {nettoPrice * 0.2}</p>
+          <p>Price: {nettoPrice.toFixed(2)}</p>
+          <p>Shipping: {shippingCosts.toFixed(2)}</p>
+          <p>VAT: {(nettoPrice * 0.2).toFixed(2)}</p>
           <p>Total: {(nettoPrice * 1.2 + shippingCosts).toFixed(2)}</p>
         </div>
       </div>

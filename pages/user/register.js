@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Layout from '../../components/Layout';
+import { registerPageStyles } from '../../styles/styles';
 
 export default function Register(props) {
   const [password, setPassword] = useState('');
@@ -51,8 +52,8 @@ export default function Register(props) {
 
   return (
     <Layout>
-      <div>
-        Login
+      <div css={registerPageStyles}>
+        <p>Login</p>
         <div>
           <div>
             <form onSubmit={register}>
@@ -81,7 +82,9 @@ export default function Register(props) {
                 value={repeatedPassword}
                 onChange={(event) => setRepeatedPassword(event.target.value)}
               />
-              <button>Register</button>
+              <p>
+                <button>Register</button>
+              </p>
               <p>{errorMessage}</p>
             </form>
           </div>

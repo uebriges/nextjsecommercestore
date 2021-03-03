@@ -3,6 +3,7 @@ import Link from 'next/link';
 import router from 'next/router';
 import { useContext, useState } from 'react';
 import Layout from '../../components/Layout';
+import { loginPageStyles } from '../../styles/styles';
 import cookies from '../../utils/cookies';
 import { ACTIONS, UserContext } from '../../utils/UserContext';
 
@@ -49,7 +50,7 @@ export default function Login(props) {
   }
   return (
     <Layout loggedInUser={props.loggedInUser}>
-      <div>
+      <div css={loginPageStyles}>
         <div>
           <form onSubmit={login}>
             <input

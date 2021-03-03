@@ -1,6 +1,6 @@
 exports.up = async (sql) => {
   await sql`
-	CREATE TABLE customer_order_products (
+	CREATE TABLE IF NOT EXISTS customer_order_products (
 		customer_order_id int,
 		product_id int,
 		quantity int,
@@ -14,5 +14,5 @@ exports.up = async (sql) => {
 };
 
 exports.down = async (sql) => {
-  await sql`DROP TABLE customer_order_products;`;
+  await sql`DROP TABLE IF EXISTS customer_order_products;`;
 };

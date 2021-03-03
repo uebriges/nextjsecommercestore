@@ -21,13 +21,22 @@ This is a [Next.js](https://nextjs.org/) vine e-commerce store project.
 <br>
 
 - Show all products in shop
+
+![All products page](./doc/productsScreenshot.PNG)
+
 - Single product page
   - Show details of single product
   - Increase/Decrease quantity of single product and add it to the cart
+
+![All products page](./doc/singleProductScreenshot.PNG)
+
 - Shopping cart
   - Increase/Decrease quantity for products in the shopping cart
   - Click on product to go back to the products page
   - Delete product from cart
+
+![All products page](./doc/shoppingCartScreenshot.PNG)
+
 - Checkout
   - Enter delivery and billing address
   - Decide if billing address is different from billing address
@@ -99,3 +108,14 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 <br/><br/>
 ![Database structure](./doc/databasestructure.PNG)
+
+<br/>
+
+## Deployment on Heroku
+
+<br/>
+
+- Add environment variable to for CSRF on Heroku
+- Clone repository
+- Create a new project on Heroku and configure automatic deploy on push
+- Connect it to your repository

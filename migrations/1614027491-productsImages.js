@@ -1,6 +1,6 @@
 exports.up = async (sql) => {
   await sql`
-	CREATE TABLE products_images (
+	CREATE TABLE IF NOT EXISTS products_images (
 		image_id int,
 		product_id int,
 		CONSTRAINT fk_image_id
@@ -10,5 +10,5 @@ exports.up = async (sql) => {
 };
 
 exports.down = async (sql) => {
-  await sql`DROP TABLE products_images;`;
+  await sql`DROP TABLE IF EXISTS products_images;`;
 };

@@ -1,6 +1,6 @@
 exports.up = async (sql) => {
   await sql`
-	CREATE TABLE products (
+	CREATE TABLE IF NOT EXISTS products (
 		product_id int GENERATED ALWAYS AS IDENTITY,
 		product_name varchar(50),
 		production_year numeric(4,0),
@@ -13,5 +13,5 @@ exports.up = async (sql) => {
 };
 
 exports.down = async (sql) => {
-  await sql`DROP TABLE products;`;
+  await sql`DROP TABLE IF EXISTS products;`;
 };

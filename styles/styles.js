@@ -34,7 +34,7 @@ export const menuStyles = css`
     font-size: 14px;
     font-weight: 700;
     border-radius: 50%;
-    height: 25px;
+    height: 10px;
     width: 25px;
     display: inline-block;
     text-align: center;
@@ -83,6 +83,7 @@ export const mainStyles = css`
 export const productPageStyles = css`
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-around;
 
   div {
     margin: 15px;
@@ -93,14 +94,19 @@ export const productPageStyles = css`
     flex-direction: column;
     max-width: 80px;
     margin: 10px;
-    max-width: 100px;
+    max-width: 200px;
     align-items: center;
+    justify-content: space-between;
+    text-align: center;
 
     .addImagesButton {
       border: none;
       background: none;
       height: 40px;
       width: 40px;
+    }
+
+    .pricePerUnit {
     }
   }
 
@@ -117,6 +123,12 @@ export const productPageStyles = css`
 export const shoppingCartStyles = css`
   .deleteCartItemStyles {
     pointer-events: none;
+  }
+
+  // If shopping cart is empty
+  p {
+    text-align: center;
+    margin: auto;
   }
 `;
 

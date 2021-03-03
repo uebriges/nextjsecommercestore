@@ -81,6 +81,20 @@ export async function getServerSideProps(context) {
   const database = require('../../utils/database');
   const nextCookies = require('next-cookies');
 
+  // Redirect from HTTP to HTTPS on Heroku
+  if (
+    context.req.headers.host &&
+    context.req.headers['x-forwarded-proto'] &&
+    context.req.headers['x-forwarded-proto'] !== 'https'
+  ) {
+    return {
+      redirect: {
+        destination: `https://${context.req.headers.host}/user/login`,
+        permanent: true,
+      },
+    };
+  }
+
   const cookieToken = nextCookies(context).token;
   let loggedInUser;
 
@@ -94,7 +108,7 @@ export async function getServerSideProps(context) {
   const secret = process.env.CSRF_TOKEN_SECRET;
 
   if (typeof secret === 'undefined') {
-    throw new Error('Secrete is not defined');
+    throw new Error('Secret is not defined');
   }
 
   const token = tokens.create(secret);

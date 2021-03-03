@@ -8,7 +8,6 @@ import {
   mainStyles,
   menuStyles,
   navBarStyles,
-  searchBarStyles,
 } from '../styles/styles';
 import * as cookies from '../utils/cookies';
 import { UserContext } from '../utils/UserContext';
@@ -52,10 +51,10 @@ export default function Layout(props: LayoutProps) {
                 </a>
               </Link>
             </div>
-            <div className="searchBar" css={searchBarStyles}>
+            {/* <div className="searchBar" css={searchBarStyles}>
               <input placeholder="Search..." />
               <button>Search</button>
-            </div>
+            </div> */}
             <div className="menu" css={menuStyles}>
               {/* For later: If administrator is logged in, no shopping cart */}
 

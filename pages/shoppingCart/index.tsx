@@ -1,4 +1,3 @@
-import { GetServerSidePropsContext } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useContext, useEffect, useState } from 'react';
@@ -122,7 +121,7 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
               <a data-cy="goToCheckoutButton">Go to checkout</a>
             </Link>
           ) : (
-            'Your cart is empty'
+            <p>Your cart is empty</p>
           )}
         </div>
         <div>

@@ -13,7 +13,6 @@ exports.up = async (sql) => {
 			'admin',
 			'admin',
 			'admin',
-			'admin',
 			'$argon2i$v=19$m=4096,t=3,p=1$u4uzLd+BfWxER4CXvRjZiw$zsezJDLAXYAH+lPsHUFtlwe368KrSSYWkavjimKoS8c',
 			true)
 	`;

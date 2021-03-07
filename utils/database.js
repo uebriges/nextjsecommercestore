@@ -5,7 +5,7 @@ import setPostgresDefaultsOnHeroku from './setPostgresDefaultsOnHeroku';
 // Set env variable for the Heroku db
 setPostgresDefaultsOnHeroku();
 
-const test = require('dotenv-safe').config();
+require('dotenv-safe').config();
 let sql;
 
 if (process.env.NODE_ENV === 'production') {
@@ -44,7 +44,7 @@ export async function getAllProducts() {
 // Get additional info which is not stored in the cookies shopping cart
 
 export async function getAdditionalInfoForCartItemsCookie(shoppingCartArray) {
-  let productIdArray = [];
+  const productIdArray = [];
   let additionalProductInformation;
   for (let i = 0; i < shoppingCartArray.length; i++) {
     productIdArray.push(shoppingCartArray[i].productId);
@@ -110,7 +110,7 @@ export async function persistOrder(shoppingCart, deliveryOptionId, customerId) {
 
   // Store products of order
 
-  const result = await sql`
+  await sql`
   INSERT INTO customer_order_products ${sql(
     orderProducts,
     'customer_order_id',
@@ -143,22 +143,10 @@ export async function getUserByUserName(username) {
   `;
 
   if (user.length !== 0) {
-    return user.map((user) => camelCaseKeys(user));
+    return user.map((currentUser) => camelCaseKeys(currentUser));
   } else {
     return false;
   }
-}
-
-// Check if password is valid
-
-export async function passwordValid(username, password) {
-  const users = await sql`
-    SELECT *
-    FROM customers
-    WHERE user_name = ${username}
-  `;
-
-  return users.map((user) => camelCaseKeys(user)).length !== 0;
 }
 
 // Add new user/customer
@@ -173,12 +161,11 @@ export async function registerUser(username, email, password) {
     VALUES (${username}, ${email}, ${password});
   `;
 
-  return user.map((user) => camelCaseKeys(user));
+  return user.map((currentUser) => camelCaseKeys(currentUser));
 }
 
 export async function createSession(userId, token) {
-  const date = new Date();
-  const session = await sql`
+  await sql`
     INSERT INTO sessions
       (user_id, token)
     VALUES
@@ -265,7 +252,7 @@ module.exports = {
   persistOrder: persistOrder,
   userNameExists: userNameExists,
   registerUser: registerUser,
-  passwordValid: passwordValid,
+  // passwordValid: passwordValid,
   createSession: createSession,
   getUserByUserName: getUserByUserName,
   updateProduct: updateProduct,

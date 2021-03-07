@@ -2,13 +2,12 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Layout from '../components/Layout';
 import { productsPageStyles } from '../styles/styles';
-import { UserContext } from '../utils/UserContext';
 
 export default function Home(props) {
-  const { userState, dispatchUserState } = useContext(UserContext);
+  // const { userState, dispatchUserState } = useContext(UserContext);
   const [products, setProducts] = useState(props.products);
 
   async function deleteProduct(event) {
@@ -85,7 +84,7 @@ export default function Home(props) {
 export async function getServerSideProps(context) {
   const database = require('../utils/database');
   const nextCookies = require('next-cookies');
-  let token = nextCookies(context).token;
+  const token = nextCookies(context).token;
   let loggedInUser;
 
   if (token) {

@@ -11,7 +11,8 @@ export default function Login(props) {
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { userState, dispatchUserState } = useContext(UserContext);
+  const { dispatchUserState } = useContext(UserContext);
+
   async function login(event) {
     event.preventDefault();
     if (username === '' || password === '') {
@@ -33,7 +34,7 @@ export default function Login(props) {
     if (response.status === 401) {
       setError('Username or password incorrect');
     } else if (response.status === 500) {
-      setError('Internal server problem.');
+      setError('Internal server error.');
     } else {
       cookies.setCookiesClientSide('token', result.token);
       dispatchUserState({

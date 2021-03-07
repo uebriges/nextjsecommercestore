@@ -32,7 +32,7 @@ type ProductInCookiesType = {
 };
 
 export default function SingleProduct(props: SingleProductType) {
-  const [totalQuantity, setTotalQuantity] = useState();
+  // const [totalQuantity, setTotalQuantity] = useState();
   const [productDescription, setProductDescription] = useState(
     props.product.productDescription,
   );
@@ -61,7 +61,7 @@ export default function SingleProduct(props: SingleProductType) {
   }
 
   useEffect(() => {
-    setTotalQuantity(cookies.updateCartTotalQuantity());
+    cookies.updateCartTotalQuantity();
   }, []);
 
   useEffect(() => {
@@ -115,7 +115,7 @@ export default function SingleProduct(props: SingleProductType) {
           'shoppingCart',
           JSON.stringify(productsInCookiesArray),
         );
-        setTotalQuantity(cookies.updateCartTotalQuantity());
+        cookies.updateCartTotalQuantity();
         cookies.updateCartTotalQuantity();
       } else {
         productsInCookiesArray.push({
@@ -126,7 +126,6 @@ export default function SingleProduct(props: SingleProductType) {
           'shoppingCart',
           JSON.stringify(productsInCookiesArray),
         );
-        setTotalQuantity(cookies.updateCartTotalQuantity());
         cookies.updateCartTotalQuantity();
       }
     } else {
@@ -135,7 +134,7 @@ export default function SingleProduct(props: SingleProductType) {
         quantity: quantityOfSingleProduct,
       };
       cookies.setCookiesClientSide('shoppingCart', [shoppingCartEntry]);
-      setTotalQuantity(cookies.updateCartTotalQuantity());
+      cookies.updateCartTotalQuantity();
       cookies.updateCartTotalQuantity();
     }
     setQuantityOfSingleProduct(0);
@@ -146,7 +145,7 @@ export default function SingleProduct(props: SingleProductType) {
       <div css={singleProductPageStyle}>
         {/* For later: If admin is logged in, button for adding images is shown */}
         <div className="singleProductImages">
-          {props.loggedInUser && props.loggedInUser.isAdmin ? (
+          {props.loggedInUser.isAdmin ? (
             <div>
               <button value="Add images" className="addImagesButton">
                 <Image
@@ -174,7 +173,7 @@ export default function SingleProduct(props: SingleProductType) {
           })}
         </div>
         <div className="singleProductDescription">
-          {props.loggedInUser !== null && props.loggedInUser.isAdmin ? (
+          {props.loggedInUser.isAdmin ? (
             <textarea
               defaultValue={props.product.productDescription}
               onChange={(event) => setProductDescription(event.target.value)}
@@ -189,7 +188,7 @@ export default function SingleProduct(props: SingleProductType) {
         <div className="singleProductAddToCart">
           <div>
             Price:
-            {props.loggedInUser && props.loggedInUser.isAdmin ? (
+            {props.loggedInUser.isAdmin ? (
               <input
                 defaultValue={props.product.pricePerUnit}
                 onChange={(event) =>
@@ -202,7 +201,7 @@ export default function SingleProduct(props: SingleProductType) {
               props.product.pricePerUnit
             )}
           </div>
-          {props.loggedInUser && props.loggedInUser.isAdmin ? (
+          {props.loggedInUser.isAdmin ? (
             <>
               <button onClick={saveChanges}>Update product</button>
               <p>{updateProductMessage}</p>
@@ -267,9 +266,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   });
 
   if (!product) {
-    if (context.res) {
-      context.res.statusCode = 404;
-    }
+    context.res.statusCode = 404;
   }
 
   return {

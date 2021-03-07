@@ -220,13 +220,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     loggedInUser = null;
   }
 
-  if (context.req) {
-    if (context.req.cookies.shoppingCart) {
-      additionalInfo = await database.getAdditionalInfoForCartItemsCookie(
-        JSON.parse(context.req.cookies.shoppingCart),
-      );
-      shoppingCart = JSON.parse(context.req.cookies.shoppingCart);
-    }
+  if (context.req.cookies.shoppingCart) {
+    additionalInfo = await database.getAdditionalInfoForCartItemsCookie(
+      JSON.parse(context.req.cookies.shoppingCart),
+    );
+    shoppingCart = JSON.parse(context.req.cookies.shoppingCart);
   }
 
   console.log('additional info: ', additionalInfo);

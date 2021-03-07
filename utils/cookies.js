@@ -12,9 +12,9 @@ export function getCookiesClientSide(key) {
   return Cookies.get(key);
 }
 
-export function getShoppingCartProductIds() {
-  const shoppingCart = Cookies.get('shoppingCart');
-}
+// export function getShoppingCartProductIds() {
+//   const shoppingCart = Cookies.get('shoppingCart');
+// }
 
 export function updateCartTotalQuantity() {
   if (Cookies.get('shoppingCart')) {
@@ -37,6 +37,6 @@ module.exports = {
   setCookiesClientSide,
   getCookiesClientSide,
   updateCartTotalQuantity,
-  getShoppingCartProductIds,
+  // getShoppingCartProductIds,
   getAllCookiesClientSide,
 };

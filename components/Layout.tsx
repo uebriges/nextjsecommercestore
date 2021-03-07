@@ -27,10 +27,6 @@ interface LayoutProps {
 export default function Layout(props: LayoutProps) {
   const { userState } = useContext(UserContext);
 
-  console.log('props.loggedInUser: ', props.loggedInUser !== undefined);
-  console.log('props.loggedInUser: ', props.loggedInUser);
-  console.log('not undefined? ', props.loggedInUser !== null);
-
   return (
     <>
       <Head>
@@ -78,9 +74,7 @@ export default function Layout(props: LayoutProps) {
               <div className="userProfileLink">
                 <Link
                   href={
-                    props.loggedInUser !== null
-                      ? '/user/profile'
-                      : '/user/login'
+                    props.loggedInUser != null ? '/user/profile' : '/user/login'
                   }
                 >
                   <a>

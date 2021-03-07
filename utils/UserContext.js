@@ -1,11 +1,13 @@
 import React, { useReducer } from 'react';
 
+// eslint-disable-next-line
 export const ACTIONS = {
   GET_USER_BY_TOKEN: 'get-username',
   LOGIN: 'login',
   LOGOUT: 'logout',
 };
 
+// eslint-disable-next-line
 export const UserContext = React.createContext();
 
 function userStateReducer(userState, action) {
@@ -26,7 +28,6 @@ function userStateReducer(userState, action) {
       });
 
       return state;
-      break;
     case ACTIONS.LOGIN:
       return {
         username: action.payload.username,

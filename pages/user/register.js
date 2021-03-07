@@ -94,7 +94,7 @@ export default function Register(props) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   const tokens = new (await import('csrf')).default();
   const secret = process.env.CSRF_TOKEN_SECRET;
 

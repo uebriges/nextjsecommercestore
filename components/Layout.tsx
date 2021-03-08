@@ -20,7 +20,7 @@ export interface LoggedInUserType {
 }
 
 interface LayoutProps {
-  loggedInUser?: LoggedInUserType;
+  loggedInUser?: LoggedInUserType | null;
   children: React.ReactNode;
 }
 

@@ -240,8 +240,15 @@ export async function getUserByToken(token) {
     token = ${token}
     AND sessions.user_id = customers.customer_id;`;
 
-  user = user[0].timestamp < new Date() ? [] : user;
-  user[0].timestamp = '';
+  console.log('user: ', user);
+
+  if (user[0].timestamp < new Date()) {
+    user = [];
+  } else {
+    user[0].timestamp = '';
+  }
+
+  console.log('user: ', user);
 
   return user.map((currentUser) => camelCaseKeys(currentUser));
 }

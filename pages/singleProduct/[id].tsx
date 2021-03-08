@@ -23,7 +23,7 @@ type ProductType = {
 
 type SingleProductType = {
   product: ProductType;
-  loggedInUser: LoggedInUserType;
+  loggedInUser: LoggedInUserType | null;
 };
 
 type ProductInCookiesType = {
@@ -74,8 +74,6 @@ export default function SingleProduct(props: SingleProductType) {
 
   const images = props.product.imagesPerProduct.split(';');
 
-  // ----------------- construction area
-
   function changeQuantityByClickHandler(
     event: React.MouseEvent<HTMLButtonElement>,
   ) {
@@ -100,7 +98,7 @@ export default function SingleProduct(props: SingleProductType) {
     // if false -> write quantity into cookie
     if (cookies.getCookiesClientSide('shoppingCart')) {
       const productsInCookiesArray = JSON.parse(
-        cookies.getCookiesClientSide('shoppingCart'),
+        cookies.getCookiesClientSide('shoppingCart')!,
       );
       const product = productsInCookiesArray.find(
         (element: ProductInCookiesType) =>
@@ -145,7 +143,7 @@ export default function SingleProduct(props: SingleProductType) {
       <div css={singleProductPageStyle}>
         {/* For later: If admin is logged in, button for adding images is shown */}
         <div className="singleProductImages">
-          {props.loggedInUser.isAdmin ? (
+          {props.loggedInUser !== null && props.loggedInUser.isAdmin ? (
             <div>
               <button value="Add images" className="addImagesButton">
                 <Image
@@ -173,7 +171,7 @@ export default function SingleProduct(props: SingleProductType) {
           })}
         </div>
         <div className="singleProductDescription">
-          {props.loggedInUser.isAdmin ? (
+          {props.loggedInUser !== null && props.loggedInUser.isAdmin ? (
             <textarea
               defaultValue={props.product.productDescription}
               onChange={(event) => setProductDescription(event.target.value)}
@@ -188,7 +186,7 @@ export default function SingleProduct(props: SingleProductType) {
         <div className="singleProductAddToCart">
           <div>
             Price:
-            {props.loggedInUser.isAdmin ? (
+            {props.loggedInUser !== null && props.loggedInUser.isAdmin ? (
               <input
                 defaultValue={props.product.pricePerUnit}
                 onChange={(event) =>
@@ -201,7 +199,7 @@ export default function SingleProduct(props: SingleProductType) {
               props.product.pricePerUnit
             )}
           </div>
-          {props.loggedInUser.isAdmin ? (
+          {props.loggedInUser !== null && props.loggedInUser.isAdmin ? (
             <>
               <button onClick={saveChanges}>Update product</button>
               <p>{updateProductMessage}</p>

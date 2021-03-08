@@ -38,7 +38,7 @@ export default function ShoppingCart(props: ShoppingCartPropsType) {
   // States and Contexts
   const [shoppingCart] = useState(
     cookies.getCookiesClientSide('shoppingCart')
-      ? JSON.parse(cookies.getCookiesClientSide('shoppingCart'))
+      ? JSON.parse(cookies.getCookiesClientSide('shoppingCart') as string)
       : props.shoppingCart,
   );
   // const [totalQuantity, setTotalQuantity] = useState();

@@ -46,7 +46,7 @@ export default function Checkout(props: CheckoutShoppingCartPropsType) {
   });
   const [shoppingCart] = useState(
     cookies.getCookiesClientSide('shoppingCart')
-      ? JSON.parse(cookies.getCookiesClientSide('shoppingCart') as string)
+      ? JSON.parse(cookies.getCookiesClientSide('shoppingCart')!)
       : props.shoppingCart,
   );
   const { userState } = useContext(UserContext);

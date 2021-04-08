@@ -1,18 +1,6 @@
-Create a readme with:
-
-- title
-- description
-- all technologies used
-- 1 or 2 screenshots
-- setup instructions
-- deployment instructions
-
-<br/>
-
 # Next.js E-Commmerce vine store
 
-d
-This is a [Next.js](https://nextjs.org/) vine e-commerce store project.
+This is a [Next.js](https://nextjs.org/) wine e-commerce store project.
 
 <br/>
 
